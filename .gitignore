@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+paper/iciev/*.aux
+paper/iciev/*.bbl
+paper/iciev/*.blg
+paper/iciev/*.log
+paper/iciev/*.fls
+paper/iciev/*.fdb_latexmk
+paper/iciev/*.out
+paper/iciev/*.synctex.gz

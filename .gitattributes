@@ -1,0 +1,12 @@
+# Preserve supplied raw bytes and template line endings.
+data/**/*.csv -text
+notebooks/*.ipynb -text
+archives/** -text
+paper/iciev/*.cls -text
+paper/iciev/*.bst -text
+paper/iciev/*.sty -text
+*.zip binary
+*.pdf binary
+*.docx binary
+*.png binary
+*.eps -text
