@@ -1,0 +1,15 @@
+{
+  "pdf_pages": 10,
+  "active_citations": 22,
+  "tables": 5,
+  "displayed_equations": 6,
+  "clean_source_zip_build": "passed",
+  "undefined_citations_or_references": false,
+  "overfull_horizontal_boxes": false,
+  "all_pages_visually_inspected": true,
+  "author_metadata_blank": true,
+  "class_and_bibliography_style_match_supplied_template_bytes": true,
+  "new_training_performed": false,
+  "remote_pr_created": false,
+  "remote_write_failure": "GitHub integration HTTP403; CLI has no GitHub credentials"
+}

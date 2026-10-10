@@ -1,0 +1,148 @@
+{
+  "verification_scope": "artifact consistency and arithmetic; no model training or historical authentication",
+  "three_class_dataset": {
+    "training_rows": 47817,
+    "test_rows": 11955,
+    "supports": {
+      "0": 23756,
+      "1": 18163,
+      "2": 5898
+    },
+    "submission_predictions": {
+      "1": 4139,
+      "2": 2315,
+      "0": 5501
+    },
+    "submission_nop": 39,
+    "submission_ids_and_order_match": true,
+    "exact_text_overlap": {
+      "training_repeats_beyond_first": 621,
+      "test_repeats_beyond_first": 54,
+      "distinct_texts_shared_between_train_test": 254
+    }
+  },
+  "larger_four_class_files": {
+    "train.csv": {
+      "rows": 54817,
+      "columns": [
+        "id",
+        "text",
+        "y"
+      ],
+      "three_class_exact_trailing_subset": true,
+      "duplicate_id_rows_beyond_first": 5630,
+      "class_supports": {
+        "1": 20250,
+        "0": 25567,
+        "2": 7789,
+        "3": 1211
+      }
+    },
+    "test.csv": {
+      "rows": 14955,
+      "columns": [
+        "id",
+        "text"
+      ],
+      "three_class_exact_trailing_subset": true,
+      "duplicate_id_rows_beyond_first": 620
+    },
+    "sample_submission.csv": {
+      "rows": 14955,
+      "columns": [
+        "id",
+        "y_pred",
+        "parameters"
+      ],
+      "three_class_exact_trailing_subset": true,
+      "duplicate_id_rows_beyond_first": 620
+    }
+  },
+  "legacy_four_class_notebook": {
+    "total_cells": 37,
+    "code_cells": 18,
+    "sha256": "d69e16f861bef34fa754e2c64be0abfe142f880494aef16e4a68fb9a3b40f817",
+    "metadata_papermill": {
+      "default_parameters": {},
+      "duration": 7881.060906,
+      "end_time": "2026-05-23T16:44:16.342919+00:00",
+      "environment_variables": {},
+      "exception": null,
+      "input_path": "__notebook__.ipynb",
+      "output_path": "__notebook__.ipynb",
+      "parameters": {},
+      "start_time": "2026-05-23T14:32:55.282013+00:00",
+      "version": "2.7.0"
+    },
+    "matches_three_class_paper_execution": false
+  },
+  "updated_notebook": {
+    "sha256": "1dcbb4150a296155e713fdf51af349d151c874c916190edee29a27931c587f25",
+    "source_sha256": "b1bf6978a045cb0abed587b7f2924095432098173497e4a6c29d7014588ebf4d",
+    "cells": 1,
+    "source_lines": 971,
+    "folds": 3,
+    "base_candidates": 6,
+    "metadata_papermill": {
+      "default_parameters": {},
+      "duration": 9142.886868,
+      "end_time": "2026-04-20T05:13:32.395653+00:00",
+      "environment_variables": {},
+      "exception": null,
+      "input_path": "__notebook__.ipynb",
+      "output_path": "__notebook__.ipynb",
+      "parameters": {},
+      "start_time": "2026-04-20T02:41:09.508785+00:00",
+      "version": "2.7.0"
+    },
+    "recorded_test_predictions": {
+      "0": 6414,
+      "1": 4401,
+      "2": 1140
+    },
+    "recorded_main_export_nop": 0.183,
+    "recorded_profiled_identity_nop": 0,
+    "generated_csvs_supplied": false,
+    "fresh_prediction_replay_performed": false
+  },
+  "manuscript_arithmetic": {
+    "input_provenance": "updated notebook retained confusion figure; no historical prediction replay",
+    "confusion_matrix": [
+      [
+        16464,
+        6331,
+        961
+      ],
+      [
+        7502,
+        9039,
+        1622
+      ],
+      [
+        1360,
+        2292,
+        2246
+      ]
+    ],
+    "class_f1": [
+      0.6708773073631882,
+      0.5046196789951152,
+      0.41875640906124734
+    ],
+    "macro_f1": 0.5314177984731835,
+    "accuracy": 0.5803166237948847,
+    "one_base_lr_scalars_width_230105": 690318,
+    "six_base_lr_scalars_width_230105": 4141908,
+    "three_meta_lr_scalars_18_inputs": 171,
+    "local_ratio_at_zero": 1062835596946366.9,
+    "local_ratio_at_exported_fraction": 2.9039223960283174,
+    "target_derived_export": 0.183,
+    "three_major_training_sections_seconds": 9029.5
+  },
+  "unresolved": [
+    "updated generated submission CSVs and row-level OOF probabilities not supplied",
+    "authoritative scoring equation/log base and parameter-count boundary",
+    "updated fitted artifacts, historical runtime/package versions, and prediction replay",
+    "two coauthor names, emails/affiliations, author approval, and disclosures"
+  ]
+}

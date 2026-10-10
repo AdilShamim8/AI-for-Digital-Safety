@@ -1,0 +1,671 @@
+--- previous_compact/main.tex
++++ paper/iciev/main.tex
+@@ -1,4 +1,4 @@
+-% Compact IJCVSP revision. See changes.diff and REVISION_CHECKLIST.md.
++% ICIEV / IJCVSP review manuscript audited against the updated notebook.
+ % Legacy unused PSTricks dependency: use color-only fallback when unavailable.
+ \IfFileExists{pstcol.sty}{}{%
+   \RequirePackage{xcolor}
+@@ -10,6 +10,8 @@
+ \usepackage{lmodern}
+ \usepackage{microtype}
+ \usepackage{graphicx}
++\usepackage{tikz}
++\usetikzlibrary{arrows.meta,positioning}
+ \usepackage{amsmath}
+ \usepackage{amssymb}
+ \usepackage{etoolbox}
+@@ -21,9 +23,6 @@
+ \usepackage[hidelinks,bookmarks=false]{hyperref}
+ 
+ \newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+-\newcommand{\needexp}{\textbf{[REQUIRES NEW EXPERIMENT]}}
+-\newcommand{\verifyauthor}{\textbf{[AUTHOR TO VERIFY]}}
+-\newcommand{\notestablished}{\textbf{[NOT ESTABLISHED BY AVAILABLE EVIDENCE]}}
+ 
+ % Suppress the template's example acceptance, publication dates, and volume.
+ \makeatletter
+@@ -47,8 +46,7 @@
+ % \input{author-details}
+ 
+ \begin{abstract}
+-Evaluating the efficiency of a harmful content classifier requires separating a small prediction component from the complete pipeline that produces its inputs. We study this separation through a retrospective audit of LightBanglaHC, a recorded implementation from the HerWILL AI for Digital Safety Datathon 2026. The recorded run uses 47,817 labeled training examples, 11,955 unlabeled test rows, and three classes defined by the implementation. Its 254,983 concatenated TF-IDF features feed four classical classifier families and two alternative linear stackers. A PyTorch linear head records the highest pooled out-of-fold macro-F1, 0.5295, compared with 0.5246 for logistic regression. This gap is descriptive and does not show superior performance. Globally fitted transformations and class weights, nonnested meta validation, and checkpoint and candidate selection all connect fitting to the reported scores. A dependency analysis of the source code shows why excluding each row from its own base fit does not isolate the full stacking procedure. The reported 39 parameters also describe only one head. The test procedure averages five heads, or 195 parameters, and the five logistic regression fits on the same path imply 3,824,760 coefficients and intercepts. We label each claim by its evidence type and specify a corrected protocol for evaluation and resource measurement. \par\medskip\noindent\textbf{Contribution of the Paper:} Overall, the study provides an inspectable case study of alignment among inference, evaluation, and accounting, rather than introducing a new classification algorithm or demonstrating a deployment advantage.
+-
++Evaluating the efficiency of a harmful content classifier requires separating a small prediction component from the complete pipeline that produces its inputs. We study this separation through a retrospective audit of the updated LightBanglaHC notebook for the HerWILL AI for Digital Safety Datathon 2026. Its recorded three-fold run uses 47,817 labeled training examples, 11,955 unlabeled test rows, four TF-IDF branches with 230,105 combined features, and 20 additional numerical features for LightGBM. Six base candidates and a logistic regression stacker feed a selected weighted ensemble with pooled out-of-fold macro-F1 0.5314, versus 0.5221 for the strongest base candidate. This gap is descriptive and does not establish superior generalization. Globally fitted transformations and class weights, nonnested meta validation, early stopping, outcome-derived ensemble weights, and threshold and candidate selection connect fitting to the reported scores. Source analysis shows why excluding each row from its own base fit does not isolate the complete procedure. The zero-parameter identity module is profiled separately and is absent from the selected prediction path. The exported value 0.183 is derived from a target score rather than a parameter measurement. Six base logistic regression fits alone imply 4,141,908 coefficients and intercepts under the recorded dimensions. We distinguish source observations, recorded outputs, direct data checks, arithmetic reconstruction, and prospective proposals. \par\medskip\noindent\textbf{Contribution of the Paper:} The study provides an inspectable case of alignment among inference, evaluation, and accounting, with a corrected protocol for evaluation and resource reporting; it introduces no new classification algorithm or demonstrated deployment advantage.
+ \end{abstract}
+ \begin{keyword}
+ Harmful-content classification \sep Evaluation validity \sep Stacked
+@@ -63,9 +61,9 @@
+ 
+ We distinguish three objects: the \emph{inference object}, which maps raw text to predictions; the \emph{evaluation object}, which includes fitting, validation, and selection; and the \emph{accounting object}, which defines the artifacts and computation included in a resource claim. Stacking~\cite{wolpert1992stacked} makes their relationship consequential: excluding a row from its own base fit does not necessarily isolate the full procedure when meta training features depend on meta validation labels. Global preprocessing and repeated selection create additional dependencies~\cite{varma2006bias,cawley2010overfitting,kapoor2023leakage}.
+ 
+-We examine one recorded LightBanglaHC implementation from the HerWILL AI for Digital Safety Datathon 2026. The supplied notebook, source, and aggregate outputs permit inference reconstruction, dependency analysis, and arithmetic accounting. Raw CSV files, row level predictions, and fitted artifacts are unavailable, so we neither rerun training nor authenticate outputs against the original data. Bangla-aware preprocessing and code-defined class names do not establish corpus language composition or annotation semantics.
+-
+-The contribution is an inspectable audit linking the three objects within one artifact, followed by a corrected prospective protocol. It is not a new algorithm, a demonstration of predictive superiority, or a measured deployment advantage. Section~\ref{sec:design} defines the evidence categories and missing-evidence markers used throughout.
++We examine one recorded LightBanglaHC implementation from the HerWILL AI for Digital Safety Datathon 2026. The updated notebook, retained outputs, competition description, and raw CSVs permit source inspection, data checks, inference reconstruction, and arithmetic accounting. Row level OOF predictions and fitted artifacts remain unavailable, so we neither rerun training nor authenticate recorded predictions by replay. Documentation describes a mixed Bangla, English, and Banglish corpus; preprocessing alone would not establish this scope.
++
++The contribution is an inspectable audit linking the three objects within one artifact, followed by a corrected prospective protocol. It is not a new algorithm, a demonstration of predictive superiority, or a measured deployment advantage. Section~\ref{sec:design} defines the evidence categories and verification limits used throughout.
+ 
+ \section{Related Work}
+ \label{sec:related}
+@@ -75,7 +73,7 @@
+ Hate speech and offensive language require distinct annotation decisions~\cite{davidson2017automated}; multi-aspect schemes also document dimensions such as hostility and targets~\cite{ousidhoum2019multilingual}. Functional tests expose weaknesses that aggregate scores can obscure, including responses to negation and counter speech~\cite{rottger2021hatecheck}. Bias analysis further requires stating which harms matter and to whom~\cite{blodgett2020language}. Without an annotation manual, LightBanglaHC's "subtle" class cannot be interpreted as a validated category of sarcasm or implicitness.
+ 
+ \label{sec:rw-bangla}
+-BD-SHS provides a Bangla hate speech resource with hierarchical annotation~\cite{romim2022bdshs}, while BanglaBERT provides pretrained language representations and Bangla understanding benchmarks~\cite{bhattacharjee2022banglabert}. These works supply context rather than directly comparable scores: no verified link connects their data or label definitions to the HerWILL corpus. Data statements document curation and population scope~\cite{bender2018datastatements}, information unavailable for this audit.
++BD-SHS provides a Bangla hate speech resource with hierarchical annotation~\cite{romim2022bdshs}, while BanglaBERT provides pretrained language representations and Bangla understanding benchmarks~\cite{bhattacharjee2022banglabert}. These works supply context rather than directly comparable scores: no verified link connects their data or label definitions to the HerWILL corpus. Data statements document curation and population scope~\cite{bender2018datastatements}, information only partly available for this audit.
+ 
+ \subsection{Stacking, Calibration, and Evaluation}
+ \label{sec:rw-stacking}
+@@ -89,38 +87,36 @@
+ Green AI motivates reporting computational cost together with predictive performance~\cite{schwartz2020greenai}. Energy reporting~\cite{henderson2020systematic}, reproducibility programs~\cite{pineau2021reproducibility}, and model cards~\cite{mitchell2019modelcards} distinguish resource measurements, replay evidence, and intended use.
+ 
+ \label{sec:rw-summary}
+-The present study applies established evaluation and reporting principles to one recorded harmful content pipeline. Its specific contribution is the joint reconstruction of prediction dependencies, selection exposure, and the boundary behind a 39-parameter claim. We do not claim that leakage or incomplete accounting is a newly discovered general problem, or that this selective review establishes an absence of prior audits.
++The present study applies established evaluation and reporting principles to one recorded harmful content pipeline. Its specific contribution is the joint reconstruction of prediction dependencies, selection exposure, and the boundary behind zero and fractional parameter claims. We do not claim that leakage or incomplete accounting is a newly discovered general problem, or that this selective review establishes an absence of prior audits.
+ 
+ \section{Study Design, Evidence, and Dataset Scope}
+ \label{sec:design}
+ 
+ \subsection{Design and Audit Method}
+-
+-The unit of analysis is the relationship among the implementation, its retained outputs, and the claims they support. We trace invoked fitting, prediction, selection, and saving operations through their inputs; comments do not establish execution. We then check internal consistency among class supports, confusion matrix margins, and reconstructed metrics. These checks substantiate the record's arithmetic, not its authenticity against raw data.
+-
+-Each claim has an evidence type: S (source observation), R (recorded output), A (arithmetic reconstruction), X (external unverified quantity), or P (prospective proposal). Missing empirical evidence is marked \needexp{}; missing source, governance, or author information is marked \verifyauthor{}; unsupported conclusions are marked \notestablished{}. These markers identify unresolved evidence requirements and must not be removed by cosmetic editing.
+-
+-\subsection{Available and Missing Artifacts}
+-
+-The supplied notebook contains one code cell, 1,248 source lines, execution count one, two standard output streams, and one embedded figure. Its metadata dates the run to 18 April 2026. The inspected files have SHA-256 digests \texttt{5a7ea479...38aeedc0} and \texttt{675e2638...6acf1a8287}.
+-
+-Raw CSV files, row level predictions, and fitted artifacts are absent. Consequently, corpus statistics and vocabularies cannot be independently checked, candidate errors cannot be paired, and fresh-process prediction equivalence cannot be evaluated. Findings are limited to the inspected record; internal consistency does not authenticate it against the original data.
+-
+-\subsection{Task and Recorded Corpus}
+-
+-The task assigns one of three labels to an input text. The saved array shapes are (47,817, 3) for the training data and (11,955, 2) for the test data, recorded before the processed text column is added. Table~\ref{tab:supports} gives the recorded class supports with the proportions and class weights derived from them.
++The unit of analysis is the relationship among the implementation, retained outputs, and supported claims. We trace invoked fitting, prediction, selection, profiling, and saving operations through their inputs; comments do not establish execution. We inspect the supplied updated notebook and check raw CSV shapes, labels, identifiers, and exact text duplication. We also reconstruct metrics from its embedded confusion figure. These checks substantiate source structure and internal consistency, not authenticated historical execution.
++
++Each claim has an evidence type: S (source observation), R (recorded output), D (direct CSV check), A (arithmetic reconstruction), X (unverified external quantity), or P (prospective proposal). An unperformed experiment is stated as such. No training, calibration, threshold search, or fresh prediction replay was performed by this audit. Source locations and full file digests are provided in the accompanying artifact ledger rather than abbreviated identities that cannot uniquely match a file.
++
++\subsection{Available Artifacts and Version Boundaries}
++The updated notebook contains one code cell, 971 source lines, execution count one, two output streams, and one embedded figure. Its metadata dates execution to 20 April 2026, with a recorded duration of 9,142.89 seconds. This metadata is a retained record, not an independently authenticated timestamp. The notebook's output says \texttt{Device: cuda}, whereas its Kaggle metadata sets GPU enablement false. Python metadata lists 3.12.12; package versions and actual device identity are not logged.
++
++This notebook is distinct from earlier materials. A prior manuscript reports a five-fold, 39-parameter TinyLinear path and macro-F1 0.5295. Another supplied notebook reports four classes, 54,817 training rows, 14,955 test rows, a 68-parameter head, and SVC selection. Neither supplies the execution record analyzed here. The updated source instead selects a weighted ensemble over six base candidates and one stacker. Its figures and numbers replace earlier-run claims in this paper; the historical files are preserved separately for provenance.
++
++The 2026 dataset ZIP contains the three-class CSVs. Separately supplied loose CSVs contain the larger four-class version, with 5,630 repeated training identifiers and 620 repeated test identifiers beyond their first occurrence (D). The smaller files are exact trailing tabular subsets of the larger ones. This relationship does not make the larger version interchangeable with the competition's three-class task. We use only the three-class archive for direct dataset checks.
++
++\subsection{Task and Checked Corpus}
++The supplied competition description maps 0 to Explicitly Toxic/Hateful, 1 to Subtly Toxic, and 2 to Non-toxic/Neutral. Training columns are \texttt{id}, \texttt{text}, and \texttt{y}; test columns are \texttt{id} and \texttt{text}. Shapes are (47,817, 3) and (11,955, 2) before processed columns are added (D), totaling 59,772 rows. Table~\ref{tab:supports} reports the class supports, which also match the updated notebook's printed counts.
+ 
+ \begin{table}[t]
+-\small
+-\centering
+-\caption{Recorded training class supports (R) with proportions and balanced class weights reconstructed from those counts (A). Weights follow $w_c = n/(3n_c)$ and were computed once from all training labels before any fold was constructed.}
++\small\centering
++\caption{Directly checked supports (D); proportions and globally balanced class weights (A). The source computes weights before splitting (S).}
+ \label{tab:supports}
+ \begin{tabular}{lrrr}
+ \toprule
+ Class & Support & Proportion (\%) & Weight \\
+ \midrule
+-Explicit Toxic & 23,756 & 49.681 & 0.670946 \\
+-Subtly Toxic & 18,163 & 37.984 & 0.877553 \\
++Explicit & 23,756 & 49.681 & 0.670946 \\
++Subtle & 18,163 & 37.984 & 0.877553 \\
+ Neutral & 5,898 & 12.335 & 2.702442 \\
+ \midrule
+ Total & 47,817 & 100.000 & \\
+@@ -128,344 +124,284 @@
+ \end{tabular}
+ \end{table}
+ 
+-The timing of the weight computation matters for what follows. The weights were derived from every training label before cross-validation began, so each fold was fitted under weights that depend on the class counts of the fold used to score it. Section~\ref{sec:validity} traces the consequence. The 11,955 test rows carry no labels. They are not an evaluated sample, and predictions on them support no accuracy claim.
+-
+-\subsection{Dataset Scope}
+-
+-The input path names a competition, which specifies an access context rather than a population. Collection dates, annotation instructions, annotator agreement, duplicate structure, language composition, and licensing and consent records are all unavailable. Recovering them is prospective (P). Their absence is an evidence gap, not a negative finding, and we do not treat it as criticism of the original release.
+-
+-Therefore, two inferences cannot be drawn. Bangla-aware preprocessing does not yield a Bangla-only corpus, and the three class names used in the code cannot replace an annotation manual.
+-
+-\subsection{Reported Metric}
+-
+-The reported metric is the unweighted mean of the three classwise F1 values. It is obtained through pooling: for each training row, a single prediction is generated, and the metric is computed once on the resulting pooled set. Pooling is not averaging. Because F1 is nonlinear with respect to the confusion counts, the pooled value is not required to match the mean of the five-fold values, and the two quantities should not be treated as if they captured the same measurement.
+-
+-\section{Recorded LightBanglaHC Pipeline}
++The source uses $w_c=n/(3n_c)$ for LR, SVC, SGD, Meta-LR, and LightGBM sample weights. CNB has no explicit class weight argument. Since weights depend on every training label, they also depend on each fold subsequently used for assessment. The test rows have no labels and support no accuracy measurement.
++
++Exact raw string checks find 621 repeated training rows and 54 repeated test rows beyond first occurrences, and 254 distinct texts shared between train and test (D). Identifiers are unique within each three-class file and disjoint between its train and test sets. Text overlap and identifier uniqueness are different properties. We neither estimate the effect of duplication nor perform a near-duplicate, shared-author, or thread analysis.
++
++\subsection{Documentation and Population Scope}
++The supplied description presents the corpus as manually annotated Bangla, English, and Banglish social media text from publicly accessible sources, including comments, captions, headlines, and status updates. It emphasizes sarcasm, coded language, code mixing, and noisy text. These are documentation claims, not measured language proportions or verified annotation agreement. The accompanying details document lists CC BY-NC-ND 4.0. It does not supply a complete annotation manual, collection dates, consent records, or annotator-welfare documentation.
++
++The intended label meanings are therefore available, but construct validation remains incomplete. A class called Subtly Toxic does not by itself validate sarcasm detection, and a script indicator is not a language-identification evaluation. The audit makes no claim that the original release lacked documentation; it describes what was supplied for inspection.
++
++\section{Updated LightBanglaHC Pipeline}
+ \label{sec:pipeline}
+ 
+-This section reconstructs the computation the notebook executed. The reconstruction follows invoked operations and their inputs. Where a library default governs behaviour that the source leaves unset, we say so and mark the resulting value \verifyauthor{}.
+-
+-\subsection{Text Processing}
+-
+-Let $x$ be the original string after missing value handling. The processed string is
+-\begin{equation}
+-s(x) = C(x) \,\|\, \texttt{FEATSEP} \,\|\, H(x),
+-\end{equation}
+-where $C$ cleans the text and $H$ emits synthetic tokens.
+-
+-In the definition of $H$, the argument is $x$, not $C(x)$. This distinction holds in both directions. The cleaner’s normalization, lowercasing, and token substitutions do not remove the original capitalization and punctuation prior to feature extraction. Likewise, the lexical rules in $H$ are applied to uncleaned input, so they never observe the normalized form.
+-
+-The injector contains 42 explicit lexical entries, 14 subtle pattern expressions, and nine sarcasm pattern expressions (S). Each entry is counted once for every match. It outputs capped markers for lexical hits, script mixture, capitalization, length, punctuation, emoji, and full-word cues involving religion, gender, or threats. At no point are any context or intent conditions validated.
+-
+-The marker names are code identifiers rather than measured constructs. The string ``this is a salad'' activates the entry \texttt{sala}. A marker that is labeled for a threat cue performs a substring match and records nothing beyond that.
+-
+-\subsection{Sparse Representation}
+-
+-Three TF-IDF branches are fitted. For branch $r$, let $t^{(r)}_{ij}$ be the count of retained feature $j$ in processed document $i$, let $\mathrm{df}^{(r)}_j$ be its document frequency, and let $N$ be the number of fitting documents. Under the documented default interpretation of the omitted normalization and IDF options,
++\subsection{Cleaning, Signals, and Numerical Features}
++Let $x$ be the original string after missing-value handling. The combined processed text is
++\begin{equation}
++s(x)=C(x)\,\|\,\texttt{SSEP}\,\|\,H(x),
++\end{equation}
++where $C$ cleans text and $H$ produces signal tokens from the original input. The cleaner applies NFKC normalization, lowercasing, URL and mention substitutions, hashtag-marker removal, emoji substitution, repeated-letter reduction, repeated-punctuation markers, and whitespace compression (S). Signals retain access to original capitalization and punctuation rather than only the cleaned string.
++
++The explicit lexical union contains 21 Bangla, 23 transliterated, and 29 English entries, totaling 73 distinct strings; the subtle inventory contains 25 entries (S). Lexical detection tests substring presence, counting each distinct entry at most once per text, rather than counting every occurrence. Signals include capped repetition of explicit, subtle, sarcasm, threat, identity-related, script, capitalization, punctuation, length, and neutral markers. The string ``this is a salad'' activates the substring \texttt{sala}; this match records a lexical condition rather than intent.
++
++Twenty numerical features are generated without fitted scaling. They cover length, word count, lexical diversity, punctuation, emoji runs, Bangla regex runs, script indicators, capitalization, lexical hits, pattern flags, a combined cue count, and short/long indicators. One feature divides the number of Bangla regex runs by character length; it is not a measured fraction of Bangla characters. Numerical features are supplied to LightGBM only. A marker named for hate or neutrality is a code identifier, not a validated social construct.
++
++\subsection{Four Globally Fitted Sparse Branches}
++Table~\ref{tab:features} lists the feature branches and recorded widths. All use sublinear term frequency and are fitted on all processed training texts before the three-fold split. Test texts are transformed, not fitted on (S). Under the documented default interpretation of omitted smoothed-IDF and normalization options, a branch computes
+ \begin{equation}
+ \begin{aligned}
+-u^{(r)}_{ij} &= \left(1 + \ln t^{(r)}_{ij}\right)\left[1 + \ln \frac{N+1}{\mathrm{df}^{(r)}_j + 1}\right] \\
+-&\quad \text{for } t^{(r)}_{ij} > 0,\\
+-\phi_r(x_i) &= u^{(r)}_i \big/ \left\|u^{(r)}_i\right\|_2,
++u_{ij}&=(1+\ln t_{ij})\left[1+\ln\frac{n+1}{\mathrm{df}_j+1}\right],\quad t_{ij}>0,\\
++\phi(x_i)&=u_i/\|u_i\|_2,
+ \end{aligned}
+ \end{equation}
+-and $u^{(r)}_{ij} = 0$ otherwise.
+-
+-The source applies sublinear TF across all branches and smoothed IDF for the word branch. It leaves normalization unspecified, and it leaves the character-branch maximum document frequency and IDF options unspecified.\footnote{Consulted API: \url{https://scikit-learn.org/1.5/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html}. This documentation version is not evidence of the historical runtime version.} Consequently, historical behavior and the fitted arrays remain \verifyauthor{}.
+-
+-The branches are configured (S) as follows. The word branch uses an analyzer over non-whitespace tokens with 1 to 4 grams, a 150,000 feature limit, and document frequency in $[1, 0.98]$. The \texttt{charwb} branch uses 2 to 6 grams with a 100,000 feature limit. The \texttt{char} branch uses 1 to 2 grams with a 50,000 feature limit. Both character branches require two documents.
+-
+-Their sparse concatenation has width $D = 254{,}983$ (R), and this is the only recorded width. The three caps add up to 300,000, but the individual fitted widths are not logged. Therefore, assigning widths of 150,000, 100,000, and 4,983 to the three branches would not be supported.
+-
+-All three vectorizers are fit on the entire training corpus before any fold is formed. The map $\phi$ is global. As a result, every fold shares a single vocabulary, a single set of document-frequency decisions, and a single set of IDF values, all derived from data that later folds treat as validation. Omitting a row’s label from an estimator does not reverse this, so later label exclusion does not produce representation isolation. Section~\ref{sec:validity} follows what occurs next.
+-
+-\subsection{Base Families}
+-
+-Table~\ref{tab:configs} lists the invoked configurations. Complement Naive Bayes (CNB) uses \texttt{char\_wb} features only~\cite{rennie2003tackling}. A source comment attributes this restriction to nonnegativity, but all three branches are nonnegative. The restriction is an implementation fact, not an ablated design choice.
++with $u_{ij}=0$ otherwise. Historical package versions and fitted arrays are absent; current documentation is not evidence of the original runtime.\footnote{Consulted API: \url{https://scikit-learn.org/1.5/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html}.}
+ 
+ \begin{table*}[t]
+-\small
+-\centering
+-\caption{Verified invoked configurations (S). Unspecified arguments retain library defaults. Installed library versions and fitted calibrator internals are unavailable.}
++\small\centering
++\caption{Source settings (S) and realized widths printed by the updated notebook (R). Numerical features are appended only for LightGBM.}
++\label{tab:features}
++\setlength{\tabcolsep}{4pt}
++\begin{tabular}{llllrr}
++\toprule
++Branch & Input & Analyzer & Grams / document frequency & Cap & Width \\
++\midrule
++Word & $s(x)$ & Word; non-whitespace tokens & 1--3; min 1, max 0.98 & 100,000 & 100,000 \\
++Character & $s(x)$ & \texttt{char\_wb} & 2--5; min 2 & 80,000 & 80,000 \\
++Clean character & $C(x)$ & \texttt{char} & 1--4; min 2 & 50,000 & 50,000 \\
++Signal & $H(x)$ & Word; non-whitespace tokens & 1--2; min 1 & 10,000 & 105 \\
++\midrule
++Combined TF-IDF & & & & 240,000 & 230,105 \\
++LightGBM input & TF-IDF + numerical & & 20 fixed numerical features & & 230,125 \\
++\bottomrule
++\end{tabular}
++\end{table*}
++
++CNB receives both character branches, totaling 130,000 columns. LR, SVC, and SGD receive the 230,105-column TF-IDF matrix. LightGBM receives that matrix plus 20 numerical columns. The global map $\phi$ exposes validation covariates to vocabulary construction, document-frequency filtering, feature caps, and IDF. A later estimator fit that excludes a row cannot undo this earlier representation fitting.
++
++\subsection{Base Candidates and Stacker}
++The source forms shuffled stratified three-fold splits with seed 42. Six base candidates are trained: two LR configurations, calibrated SVC, calibrated CNB, calibrated SGD, and LightGBM~\cite{ke2017lightgbm}. Table~\ref{tab:configs} gives explicit settings. The two LR candidates share an estimator family; six candidates do not imply six distinct algorithmic families.
++
++\begin{table*}[t]
++\small\centering
++\caption{Invoked settings in the updated source (S). Unspecified settings depend on the unrecorded historical library versions.}
+ \label{tab:configs}
+ \begin{tabularx}{\textwidth}{llX}
+ \toprule
+-Candidate & Inputs & Explicit settings and training controls \\
+-\midrule
+-LR & Full TF-IDF & $C = 8$; saga; multinomial; max.\ 2,000 iterations; tolerance $10^{-4}$; global balanced weights; seed 42. \\
+-CNB & \texttt{char\_wb} & $\alpha = 0.05$; \texttt{norm=True}; isotonic calibration, CV $= 3$; no explicit class weight argument. \\
+-SVC & Full TF-IDF & $C = 0.3$; max.\ 5,000 iterations; \texttt{dual=True}; global balanced weights; seed 42; isotonic calibration, CV $= 3$. \\
+-SGD & Full TF-IDF & Modified Huber loss; $\alpha = 10^{-4}$; max.\ 200 iterations; tolerance $10^{-4}$; global balanced weights; seed 42; isotonic calibration, CV $= 3$. \\
+-Meta-LR & 12 probabilities & $C = 10$; max.\ 500 iterations; multinomial; global balanced weights; seed 42; solver not explicitly overridden. \\
+-TinyLinear & 12 probabilities & \texttt{Linear(12,3)}; Xavier uniform weights; weighted cross entropy; AdamW rate 0.005, decay $10^{-4}$; cosine scheduler $T_{\max} = 30$; max.\ 30 epochs; patience 8; batches 512/1,024; seeds 42--46. \\
++Candidate & Input & Explicit configuration \\
++\midrule
++LR\_C8, LR\_C3 & TF-IDF & $C=8$ or 3; saga; multinomial; max. 2,000 iterations; tolerance $10^{-3}$; global class weights; seed 42. \\
++SVC & TF-IDF & LinearSVC, $C=0.5$; max. 3,000 iterations; global class weights; seed 42; isotonic calibration, CV $=2$. \\
++CNB & Two character branches & $\alpha=0.05$; \texttt{norm=True}; isotonic calibration, CV $=2$; no explicit class weights. \\
++SGD & TF-IDF & Modified Huber; $\alpha=10^{-4}$; max. 200 iterations; global class weights; seed 42; isotonic calibration, CV $=2$. \\
++LightGBM & TF-IDF + 20 numerical & Multiclass log loss; 63 leaves; rate 0.1; feature fraction 0.7; bagging fraction 0.8, frequency 5; min. child samples 20; $L_1=0.1$, $L_2=0.5$; \texttt{is\_unbalance=True}; global sample weights; seed 42; max. 1,000 rounds; early-stopping patience 80. \\
++Meta-LR & 18 probabilities & $C=10$; max. 500 iterations; multinomial; global class weights; seed 42; solver not overridden. \\
+ \bottomrule
+ \end{tabularx}
+ \end{table*}
+ 
+-CNB, LinearSVC (SVC), and SGDClassifier (SGD) are isotonically calibrated. Calibration changes the probability generating procedure supplied to the meta model~\cite{niculescumizil2005probabilities}. All three calibrated families use globally fitted features; SVC and SGD also use global class weights, whereas CNB has no explicit class weight argument. No calibration diagnostic is recorded~\cite{vaicenavicius2019calibration}.
+-
+-\subsection{Stacking Construction}
+-
+-Let $V_1, \dots, V_5$ be disjoint validation sets partitioning $I = \{1, \dots, n\}$, obtained by shuffled stratified five fold splitting with seed 42, and let $f(i)$ be the fold containing $i$. For family $b$, let $h^{(-f)}_b$ be its probability producing fit on $I \setminus V_f$, including calibration where applicable, taking the global $\phi$ as input.
+-
+-The superscript needs care. It excludes $V_f$ from estimator fitting only. It does not exclude $V_f$ from vocabulary estimation or from the class weight computation, both of which used all training rows.
+-
+-Training rows and test rows receive their meta features differently:
++Calibration adds fitted state to the probability path~\cite{niculescumizil2005probabilities}. SVC and SGD use global class weights, whereas CNB does not. Their calibration fits remain inside each base fitting subset but share globally fitted features. No proper-score or reliability diagnostic evaluates these probabilities~\cite{vaicenavicius2019calibration}. LightGBM's stopping criterion uses the same validation fold later scored for macro-F1; log loss and macro-F1 are different objectives.
++
++\subsection{OOF Features and Selected Test Predictor}
++Let $V_1,V_2,V_3$ partition $I=\{1,\ldots,n\}$, and let $f(i)$ identify row $i$'s fold. For base candidate $b$, let $h_b^{(-f)}$ be its probability-producing fit excluding $V_f$, with calibration or early stopping as specified. Training and test meta features differ:
+ \begin{equation}
+ \begin{aligned}
+-z_i &= \left[h^{(-f(i))}_b(\phi(x_i))\right]^4_{b=1} \in \mathbb{R}^{12},\\
+-\bar{z}(x) &= \left[\frac{1}{5}\sum_{f=1}^{5} h^{(-f)}_b(\phi(x))\right]^4_{b=1}.
++z_i&=\left[h_b^{(-f(i))}(\phi(x_i))\right]_{b=1}^{6}\in\mathbb{R}^{18},\\
++\bar z(x)&=\left[\frac{1}{3}\sum_{f=1}^{3}h_b^{(-f)}(\phi(x))\right]_{b=1}^{6}.
+ \end{aligned}
+ \end{equation}
+-A training row receives one fold-specific prediction per family. A test row receives a within-family average over five fits.
+-
+-TinyLinear computes logits $\ell_i = W z_i + b$ with $W \in \mathbb{R}^{3 \times 12}$ and no hidden layer. It is trained with weighted cross-entropy. That objective is not macro-F1, yet macro-F1 is what selects the checkpoint, and every epoch is assessed on the same fold later included in reported validation performance.
+-
+-Final test labels are
+-\begin{equation}
+-\hat{y}(x) = \arg\max_c \frac{1}{5}\sum_{f=1}^{5} q_f(\bar{z}(x))_c
+-\end{equation}
+-over the selected heads $q_f$. Five softmax outputs are averaged. In general, this is not equivalent to applying one head obtained by averaging coefficients. The construction implies 39 scalar weights and biases per head and 195 across five heads (A), before any upstream state is counted.
+-
+-Figure~\ref{fig:pipeline} summarises the computation. It is not fully nested. When $V_f$ serves as a meta validation set, a meta training row drawn from another $V_g$ was represented by a base fit that used labels from $V_f$.
+-
++LightGBM additionally receives the numerical features, suppressed in this notation for readability. The notation excludes a fold from its base estimator fit, not from global preprocessing, class weights, or LightGBM stopping selection.
++
++Three Meta-LR fits are trained from the single global OOF feature matrix using the same split scheme. Their test probabilities are averaged. The selected final predictor combines six averaged base outputs and the averaged Meta-LR output, so Meta-LR is an active component rather than merely an alternative candidate. If $F_j$ is candidate $j$'s pooled OOF macro-F1 and $p_j(x)$ its test probability vector, then
++\begin{equation}
++\alpha_j=\frac{F_j^2}{\sum_{k=1}^{7}F_k^2},\qquad
++\hat y(x)=\arg\max_c\sum_{j=1}^{7}\alpha_j p_j(x)_c.
++\label{eq:ensemble}
++\end{equation}
++The weights are learned from labeled evaluation outcomes. ``Weighted'' therefore does not mean a prespecified, label-independent average. Figure~\ref{fig:pipeline} separates this prediction path from the independent profiling operation.
+ 
+ \begin{figure*}[t]
+ \centering
+-\includegraphics[width=0.68\textwidth]{pipeline.pdf}
+-\caption{Source-derived schematic (S), not an experimental plot; the selected path averages five TinyLinear softmax outputs over within-family averages of base-fold predictions.}
++\begin{tikzpicture}[node distance=7mm, every node/.style={font=\small},
++box/.style={draw,rounded corners,align=center,text width=10.4cm,minimum height=9mm},
++arr/.style={-{Latex[length=2mm]},thick}]
++\node[box] (text) {Raw text: cleaning, signal tokens, and 20 numerical rules};
++\node[box,below=of text] (features) {Four fitted TF-IDF branches: 230,105 columns\\LightGBM additionally receives 20 numerical columns};
++\node[box,below=of features] (base) {Six base candidates, each with three fold-specific prediction objects\\Within-candidate test probabilities are averaged};
++\node[box,below=of base] (meta) {18 base probability features feed three Meta-LR fits\\Their test probabilities are averaged};
++\node[box,below=of meta] (final) {Weighted average of six base outputs and Meta-LR; three-class argmax\\Weights are derived from pooled OOF macro-F1};
++\draw[arr] (text)--(features);\draw[arr] (features)--(base);
++\draw[arr] (base)--(meta);\draw[arr] (meta)--(final);
++\node[draw,dashed,align=center,text width=10.4cm,below=9mm of final] {Separate profiling call: \texttt{ZeroParamNet} identity on a random 3-vector\\No call connects this module to the selected prediction path};
++\end{tikzpicture}
++\caption{Source-derived computation (S), not a measured deployment benchmark. Base outputs also enter the final weighted average directly, as specified in Equation~\ref{eq:ensemble}.}
+ \label{fig:pipeline}
+ \end{figure*}
+ 
+-\section{Experimental Record}
++\section{Recorded Results and Submission Provenance}
+ \label{sec:record}
+ 
+-The record contains six candidate evaluations under one seeded partitioning scheme. This section reports what was recorded and what the recorded values do and do not support.
+-
+-\subsection{Candidate Comparison}
+-
+-Table~\ref{tab:results} preserves the pooled and per fold macro-F1 values at their printed precision. TinyLinear is the selected candidate. LR is the strongest base learner.
++\subsection{Candidate and Ensemble Results}
++Table~\ref{tab:results} preserves printed candidate scores and fold values. LR\_C3 is the strongest base candidate. The weighted ensemble has pooled OOF macro-F1 0.5314, compared with 0.5306 for the simple average and 0.5221 for LR\_C3 (R). The rounded weighted-versus-base difference is 0.0093, or 0.93 percentage points (A). It is descriptive; the source selects weights, stopping points, and candidates using evaluation information, and no untouched comparison or paired prediction file is supplied.
+ 
+ \begin{table*}[t]
+-\small
+-\centering
+-\caption{Recorded pooled out of fold macro-F1 and per fold values (R). All candidates share global feature fitting, and both stackers reuse nonnested out of fold features. Folds are dependent partitions, so no interval is attached.}
++\small\centering
++\caption{Recorded pooled and fold macro-F1 (R). Ensemble variants are scored on the same pooled OOF rows; no uncertainty interval is inferred from dependent folds.}
+ \label{tab:results}
+-\begin{tabular}{llrrrrrr}
++\begin{tabular}{llrrrr}
+ \toprule
+-Candidate & Role & Pooled & Fold 1 & Fold 2 & Fold 3 & Fold 4 & Fold 5 \\
+-\midrule
+-LR & Base learner & 0.5246 & 0.5265 & 0.5171 & 0.5259 & 0.5254 & 0.5278 \\
+-CNB & Base learner & 0.4478 & 0.4501 & 0.4397 & 0.4573 & 0.4468 & 0.4450 \\
+-SVC & Base learner & 0.5053 & 0.5042 & 0.4950 & 0.5152 & 0.5094 & 0.5027 \\
+-SGD & Base learner & 0.4977 & 0.4965 & 0.4922 & 0.5049 & 0.5025 & 0.4919 \\
+-Meta-LR & Alt.\ stacker & 0.5268 & 0.5235 & 0.5183 & 0.5220 & 0.5332 & 0.5369 \\
+-TinyLinear & Selected stacker & 0.5295 & 0.5264 & 0.5255 & 0.5266 & 0.5338 & 0.5350 \\
++Candidate & Role & Pooled & Fold 1 & Fold 2 & Fold 3 \\
++\midrule
++LR\_C8 & Base & 0.5169 & 0.5158 & 0.5122 & 0.5227 \\
++LR\_C3 & Base & 0.5221 & 0.5209 & 0.5171 & 0.5281 \\
++SVC & Base & 0.4824 & 0.4860 & 0.4827 & 0.4782 \\
++CNB & Base & 0.4391 & 0.4403 & 0.4356 & 0.4414 \\
++SGD & Base & 0.4691 & 0.4675 & 0.4719 & 0.4678 \\
++LightGBM & Base & 0.5160 & 0.5154 & 0.5136 & 0.5191 \\
++Meta-LR & Stacker / ensemble member & 0.5218 & 0.5183 & 0.5169 & 0.5299 \\
++\midrule
++Weighted & Selected ensemble & 0.5314 & -- & -- & -- \\
++Simple average & Alternative & 0.5306 & -- & -- & -- \\
++Weighted + thresholds & Alternative & 0.5300 & -- & -- & -- \\
++Average + thresholds & Alternative & 0.5287 & -- & -- & -- \\
+ \bottomrule
+ \end{tabular}
+ \end{table*}
+ 
+-The rounded difference between them is 0.0049 macro-F1 (A). Three things limit what that number supports. It is not evidence of stable superiority, since the folds are dependent partitions and no paired predictions were retained. It does not isolate a cause, since TinyLinear and LR differ in probability combination, class weighting, regularization, and stopping rule at once. And it was produced under the shared dependencies described in Section~\ref{sec:pipeline}.
+-
+-The pooled OOF result uses each row's fold-specific meta features and its corresponding held-out head. Test inference instead averages base-fold outputs within each family and then averages five head outputs. The recorded OOF score therefore does not directly evaluate the complete five-head test predictor on untouched labeled examples.
+-
+-The neural seeds 42 to 46 vary initialization across folds. They are not independent repeated evaluations, and the five resulting scores are not replications of one measurement.
+-
+-No hyperparameter search is recorded beyond the fixed configurations, the epoch selection, and the six way comparison.
+-
+-\subsection{Unused Definitions}
+-
+-An untrained 12--8--3 MLP and a helper with learning rate 0.01 are defined but not invoked. The MLP contains 131 parameters (A), rather than the commented 123; the executed TinyLinear learning rate is 0.005. Neither unused definition is an experiment or part of the selected inference path.
+-
+-\subsection{Error Structure}
+-
+-Table~\ref{tab:confusion} reproduces the nine integer annotations of the recorded confusion figure, with classwise metrics reconstructed from those counts. Row sums match all printed supports and total 47,817. The macro-F1 definition yields a pooled value of 0.529547 with accuracy 0.563544 (A).
++Pooling computes F1 once from one prediction per training row. It is not the mean of fold F1 values because F1 is nonlinear in confusion counts. Nor does the OOF value directly evaluate the final test procedure: an OOF row uses fold-specific base outputs and its held-out meta fit, whereas test prediction averages three fits at both levels. The global OOF-derived weights add another difference between exclusion from a base fit and assessment of a frozen procedure.
++
++The threshold search evaluates $30\times30=900$ pairs for each of the two ensemble probability arrays, adjusting classes 0 and 1 while leaving class 2's divisor at one (S). Its search interval is 0.1 to 0.9, omitting the unadjusted pair $(1,1)$. A lower best threshold score than the unadjusted score is therefore possible without a contradiction. The final source compares four variants and selects the unadjusted weighted ensemble. The displayed weighted thresholds 0.90, 0.87, and 1.00 are not on that selected prediction path.
++
++\subsection{Confusion Counts and Error Structure}
++Table~\ref{tab:confusion} transcribes the nine integer annotations in the updated notebook's embedded confusion figure. Row sums match the raw CSV supports and total 47,817. Reconstruction yields macro-F1 0.5314177985 and accuracy 0.5803166238 (A), consistent with the printed 0.5314. The three classwise values agree with the figure's four-decimal labels.
+ 
+ \begin{table*}[t]
+-\small
+-\centering
+-\caption{Selected TinyLinear out of fold confusion matrix (R), with diagonal row percentages and classwise metrics computed from those counts (A). Rows are actual labels and columns predicted labels. Classwise values are rounded from the exact count derived figures.}
++\small\centering
++\caption{Selected weighted-ensemble OOF confusion counts (R), with classwise metrics reconstructed from the displayed counts (A). Rows are actual labels; columns predicted labels.}
+ \label{tab:confusion}
+ \begin{tabular}{lrrrrrrr}
+ \toprule
+-Actual & Explicit & Subtle & Neutral & Supp. & Prec. & Rec. & F1 \\
+-\midrule
+-Explicit & 15,192 (63.95\%) & 6,406 & 2,158 & 23,756 & 0.6790 & 0.6395 & 0.6587 \\
+-Subtle & 6,217 & 8,509 (46.85\%) & 3,437 & 18,163 & 0.5125 & 0.4685 & 0.4895 \\
+-Neutral & 964 & 1,688 & 3,246 (55.04\%) & 5,898 & 0.3672 & 0.5504 & 0.4405 \\
+-\midrule
+-Predicted (A) & 22,373 & 16,603 & 8,841 & 47,817 & \multicolumn{3}{c}{Macro-F1 0.529547 (A)} \\
++Actual & Explicit & Subtle & Neutral & Support & Precision & Recall & F1 \\
++\midrule
++Explicit & 16,464 & 6,331 & 961 & 23,756 & 0.6501 & 0.6930 & 0.6709 \\
++Subtle & 7,502 & 9,039 & 1,622 & 18,163 & 0.5118 & 0.4977 & 0.5046 \\
++Neutral & 1,360 & 2,292 & 2,246 & 5,898 & 0.4651 & 0.3808 & 0.4188 \\
++\midrule
++Predicted & 25,326 & 17,662 & 4,829 & 47,817 & \multicolumn{3}{c}{Macro-F1 0.531418 (A)} \\
+ \bottomrule
+ \end{tabular}
+ \end{table*}
+ 
+-Three patterns are visible in the counts. Neutral has the lowest classwise F1, although Subtle has the lower recall. The largest off-diagonal counts are Explicit predicted as Subtle (6,406) and Subtle predicted as Explicit (6,217). Of 8,841 examples predicted Neutral, 5,595 carry a toxic label, while 2,652 actual Neutral examples are assigned one.
+-
+-These are aggregate counts. They describe where predictions and labels disagree. They establish no cause, and without row level outputs the joint error pattern across candidates cannot be recovered.
+-
+-An always Explicit predictor would score $\mathrm{MacroF1} = 2n_0 / [3(n + n_0)] = 0.221275$ (A). This is an arithmetic reference point computed from the class supports, not a measured comparison system.
+-
+-\subsection{Test Predictions and Saved Artifacts}
+-
+-The test predictions number 5,501 Explicit, 4,139 Subtle, and 2,315 Neutral (R). The test rows carry no labels. These counts are therefore neither an accuracy measurement nor evidence that the class balance of the corpus was recovered.
+-
+-The source writes a submission with a constant \texttt{parameters} field of 39. It does so without loading the configured sample submission file, so the save message demonstrates neither schema acceptance nor any rank.
+-
+-Several artifacts needed for replay are missing. The upstream transforms are not serialized. The device string and the Python metadata conflict. Library versions, selected epochs, and fitted state bytes are absent. Section~\ref{sec:accounting} returns to what this means for any resource claim.
++Neutral has the lowest F1 and recall. Of 4,829 examples predicted Neutral, 2,583 have a toxic label; 3,652 actual Neutral examples are assigned a toxic label. The largest off-diagonal count is 7,502 Subtle examples predicted Explicit. These are descriptions of disagreements, not explanations of sarcasm, lexical bias, or annotation error. Row level OOF predictions and paired candidate outputs are absent, so joint errors cannot be recovered. An always-Explicit predictor has arithmetic macro-F1 $2n_0/[3(n+n_0)]=0.221275$ (A), not a measured baseline experiment.
++
++\subsection{Test Outputs and Version Mismatch}
++The updated notebook prints 6,414 Explicit, 4,401 Subtle, and 1,140 Neutral test predictions, totaling 11,955 (R). It prints \texttt{parameters}=0.183 for its main export. Those generated CSVs were not supplied. The separately supplied \texttt{submission.csv} instead has 5,501, 4,139, and 2,315 predictions and constant NOP 39 (D). Its IDs match the three-class test and sample submission in order, but it is not the output described by the updated notebook. We preserve it as an earlier-version artifact and do not relabel it as the updated submission.
++
++The updated source writes several files with different declared NOP values. Because zero equals the initial profiled value, its duplicate-skipping condition skips every zero-valued loop entry; the retained output confirms files for 0.1, 0.3, and 1, followed by the main file at 0.183. A later summary instructs submission of a zero-valued filename despite no corresponding save in this path. We distinguish invoked saves from report text. No save message establishes platform acceptance, compliance, or leaderboard rank.
++
++\subsection{Timing and Retained State}
++The recorded LR training sections take 2,601.7 and 2,625.0 seconds, and LightGBM takes 3,802.8 seconds (R). These three sections alone total 9,029.5 seconds, about 150.5 minutes (A), before other work. The notebook metadata reports about 152.4 minutes. Thus its concluding ``25--35 minutes'' claim is inconsistent with its retained timings. Those timings are historical output, not a newly controlled runtime benchmark, and no inference latency measurement is supplied.
++
++LightGBM reports best iterations 149, 173, and 182 (R). No fitted vectorizers, base models, boosters, meta estimators, or OOF probability arrays are serialized by the inspected source. In-memory test arrays are generated before export, but the absence of saved model files prevents fresh-process raw-text replay. Historical environment uncertainty remains even though the source and recorded dimensions can now be inspected.
+ 
+ \section{Evaluation Validity}
+ \label{sec:validity}
+ 
+-The recorded macro-F1 addresses a descriptive question. It indicates which predictions this notebook retained and how it scored them. However, it does not show how a fully specified training and selection procedure performs on untouched examples.
+-
+-These are distinct assertions because they impose different requirements. The first demands that a row be left out of the fit that forms its own baseline. The second demands that evaluation information be omitted across the entire fitting and selection lineage. The third requires sufficiently strong assumptions to support an uncertainty estimate. The recorded procedure satisfies the first requirement. This section explains why it does not satisfy the second or the third.
+-
+-\subsection{Global Fitting Before the Fold Loop}
+-
+-All vectorizers are fit before the fold loop starts. As a result, the validation covariates $X_{V_a}$ influence four elements: membership in the vocabulary, eligibility based on document frequency, cap-based feature selection, and the inverse document frequency values themselves.
+-
+-Fixing the hyperparameters does not change this. The caps and thresholds are fixed, but the set of features that remain after applying them depends on the data, and the remaining set was chosen with $X_{V_a}$ in mind.
+-
+-It is important to state the extent of the exposure with precision. The test text is transformed only and is never fit on. What occurs is exposure of validation covariates within the labeled corpus, not exposure to the held-out test rows.
+-
+-The global class weights $w_{I,c} = |I| / (3n_{I,c})$ reflect the same structure a second time. They are computed once using the class counts from every fold, meaning that each fold is fit using weights that depend on the fold that is later used to score it.
+-
+-\subsection{The Meta-Training Path}
+-
+-The meta-training path persists even if global preprocessing and class weights are provisionally accepted.
+-
+-Consider a meta learner $q^{(-a)}$, nominally trained on $\{(z_i, y_i) : i \notin V_a\}$ and evaluated on $V_a$. Take a meta training row $i \in V_b$ with $b \neq a$. Its base features came from a fit on $I \setminus V_b$. That fitting set includes $V_a$. The labels of $V_a$ therefore reach the meta training data:
++\subsection{Global Representation and Label Statistics}
++The recorded macro-F1 describes the notebook's retained development predictions. It does not show how a fully specified fitting and selection procedure performs on untouched examples. All four TF-IDF fits precede fold construction, so validation covariates affect vocabulary membership, frequency filtering, cap-based selection, and IDF. Hyperparameters can be fixed while the fitted representation still depends on evaluation text~\cite{kapoor2023leakage}.
++
++Global class weights expose label statistics separately: $w_{I,c}=|I|/(3n_{I,c})$ includes every validation label in the class count used to fit a fold. LightGBM's fitting sample weights inherit the same dependency. The test text is transformed only, so this is an intra-training evaluation exposure, not evidence that the source fits vocabulary on unlabeled test text. Exact train/test text overlap is another dataset property, with a separate provenance from these code-level dependencies.
++
++\subsection{Nonnested Meta-Training Dependencies}
++For a meta learner $q^{(-a)}$ trained on $\{(z_i,y_i):i\notin V_a\}$ and evaluated on $V_a$, take a meta-training row $i\in V_b$, $b\ne a$. Its features came from base fits on $I\setminus V_b$, a set containing $V_a$. Thus
+ \begin{equation}
+ \begin{aligned}
+-y_{V_a} &\longrightarrow h_m^{(-b)} \longrightarrow z_i \\
+-&\longrightarrow \text{meta-training data} \longrightarrow q^{(-a)}.
++y_{V_a}&\longrightarrow h_m^{(-b)}\longrightarrow z_i\\
++&\longrightarrow\text{meta-training data}\longrightarrow q^{(-a)}.
+ \end{aligned}
+ \label{eq:path}
+ \end{equation}
+-
+-The exclusion at the row level still holds. A row $j \in V_a$ does receive its own baseline features from fits that exclude $V_a$. But the model that evaluates $j$ was trained on features whose construction used $y_{V_a}$. Consequently, row-level exclusion does not extend to the model performing the evaluation.
+-
+-This pattern remains under any fold assignment. It is resolved only when the stacking features are rebuilt within the outer training partition, which is the correction described in Section~\ref{sec:discussion}.
+-
+-Equation~\ref{eq:path} demonstrates a source-level breach of full procedure holdout. It does not determine the magnitude or direction of the resulting effect. Estimating that would require the corrected procedure and a new evaluation sample, and both are \needexp{}.
+-
+-\subsection{Selection Exposure}
+-
+-Adaptive choices introduce additional exposure, and neither of the two procedures recorded here creates a new evaluation sample.
+-
+-TinyLinear’s checkpoint is selected using macro-F1 computed on the same labels that are later used to report its performance. Each epoch is evaluated against that fold, and the epoch with the best score is retained.
+-
+-The six-way comparison in Table~\ref{tab:results} chooses a winner using pooled out-of-fold outcomes. The selected value is then reported as the result.
+-
+-Both cases create opportunities for selection optimism~\cite{cawley2010overfitting,varma2006bias}. Neither is paired with a bias correction, and the reported figures provide no estimate of how large that optimism might be.
+-
+-\subsection{Why No Interval Is Reported}
+-
+-Keeping the outer labels untouched is separate from ensuring that fold scores are independent, and the recorded procedure satisfies neither condition.
+-
+-The five training sets overlap heavily. Each pair shares roughly three-fifths of the full corpus, or three-quarters of either fitting subset, so the five resulting scores are not five independent measurements of one quantity.
+-
+-Stratification does not repair this. It controls class balance across folds and nothing else. Shared author, near duplicate, and temporal dependence are all untouched by it, and none of the three can be ruled out without the raw data.
+-
+-Treating the five scores as independent and identically distributed observations is therefore inappropriate. There is no universally unbiased estimator of K-fold cross-validation variance based only on the observed fold errors~\cite{bengio2004variance}, and a paired significance test would require the row level predictions that the artifact does not retain~\cite{dror2018significance}. This audit reports no significance test and no confidence interval, and the absence is deliberate rather than an omission.
+-
+-\section{End-to-End Parameter and Resource Accounting}
++A row in $V_a$ does receive base features from an estimator fit excluding $V_a$. However, the meta model evaluating that row was trained on other features whose construction used $y_{V_a}$. Row-level OOF exclusion therefore does not isolate the complete stacker. This structural dependency remains even if global preprocessing and class weights are provisionally accepted.
++
++Rebuilding base OOF features only once for all meta folds preserves this path. It must instead be regenerated within the training partition of each outer assessment split, and again within the allowed fitting subset of each selection split. Equation~\ref{eq:path} establishes missing isolation, not the magnitude or direction of score distortion. Quantifying that would require a corrected rerun with protected assessment labels; none was performed here.
++
++\subsection{Stopping, Weighting, and Candidate Selection}
++LightGBM uses its validation labels for early stopping and subsequently reports macro-F1 on those same rows. The stopping objective is multiclass log loss; using a different reporting objective does not create a new evaluation sample. The ensemble weights are functions of pooled OOF F1 values, which are functions of all training labels. An OOF row's label can therefore influence its final weighted predictor through the aggregation weights even apart from meta-feature construction.
++
++The two threshold searches each assess 900 choices on the entire pooled labeled OOF set. Their selected results and the unadjusted alternatives are then compared on those same labels. The final weighted result is selected from this development comparison. These repeated uses create opportunities for selection optimism~\cite{varma2006bias,cawley2010overfitting}; the audit measures no bias magnitude and does not attribute the rounded 0.0093 difference to any one component.
++
++\subsection{Dependence and Uncertainty}
++The three fitting subsets overlap: each pair shares roughly one-third of the full corpus, or half of either fitting subset. They are not independent repetitions. Stratification addresses class balance but does not protect against duplicates, shared authors, threads, or temporal dependence. Exact repetitions have been identified in the raw CSVs, but their allocation across the historical folds cannot be inspected from a saved fold-index file because none is provided.
++
++There is no universally unbiased K-fold variance estimator based only on observed fold errors~\cite{bengio2004variance}. Paired comparisons also require retained row level predictions and a procedure appropriate to the data's independent units~\cite{dror2018significance}. We report neither a naive fold-based interval nor a significance claim. Such an interval would not resolve the fitting and selection exposures already traced.
++
++\section{Parameter Boundaries and Score Provenance}
+ \label{sec:accounting}
+ 
+-A resource claim must identify its prediction procedure and measurement boundary. We inventory the selected test predictor without treating its cost as measured or its OOF score as an untouched evaluation of that predictor.
+-
+-\subsection{The Evaluated Computation}
+-
+-The selected test procedure consists of five steps. It passes raw text through the cleaner, the injector, and the three fitted vectorizers. It produces probabilities using LR, CNB, SVC, and SGD. It averages the five outer fold outputs within each model family. It then applies five neural heads to the resulting twelve features. Finally, it takes an argmax over the averaged softmax outputs from those heads.
+-
+-Two boundary errors are possible here, and they move in opposite directions. Counting Meta-LR would exaggerate the requirement because it is an alternative candidate rather than a component of the selected path. Counting only the neural head would understate it because the head cannot generate a prediction without each of the upstream stages listed above.
+-
+-\subsection{Counted Structures}
+-
+-Assuming the stated $3 \times 12$ coefficient matrix with one intercept per head, and $D = 254{,}983$:
++\subsection{The Identity Module Is a Different Object}
++The source defines \texttt{ZeroParamNet.forward(x)} to return $x$ unchanged. It has no trainable parameters. Profiling, when available, calls this module on a random three-element vector after the selected predictions already exist (S). No invocation applies the module to raw text, base probabilities, meta features, or selected outputs. Its zero count therefore describes a separate identity operation, not the harmful-content predictor.
++
++The retained output prints \texttt{Manual NOP: 0} and \texttt{Final thop NOP: 0}, without the success line printed by the successful profiling branch. The variable is initialized to zero and remains zero when THOP is unavailable or fails. Consequently, the final printed zero alone cannot establish successful profiling. The source uses one positional input to this separate module, whereas the supplied competition description illustrates a two-input model call with token IDs and an attention mask. These interfaces do not determine a whole-system accounting boundary.
++
++\subsection{Structural Inventory of the Selected Predictor}
++The selected path contains six base candidates, each averaged over three fold-specific fits, plus three Meta-LR fits and seven combination weights. It also needs the cleaner, signals, four fitted vocabularies/IDF arrays, and LightGBM numerical rules. Unlike the earlier TinyLinear path, there is no learned PyTorch head in the updated predictor. Counting such a historical head would describe another version.
++
++At recorded TF-IDF width $D=230{,}105$, each three-class multinomial LR fit has $3D$ coefficients and three intercepts. The two LR candidates each require three fits for their stored test averages. Meta-LR has 18 input probabilities and three output scores:
+ \begin{equation}
+ \begin{aligned}
+-N_{\mathrm{head}} &= 3 \times 12 + 3 = 39, \\
+-N_{\mathrm{5\ heads}} &= 5 \times 39 = 195,\\
+-N_{\mathrm{LR}} &= 3D + 3 = 764{,}952, \\
+-N_{\mathrm{5\ LR}} &= 5(3D + 3) = 3{,}824{,}760.
++N_{\mathrm{one\ base\ LR}}&=3D+3=690{,}318,\\
++N_{\mathrm{six\ base\ LR}}&=6(3D+3)=4{,}141{,}908,\\
++N_{\mathrm{three\ Meta\ LR}}&=3(3\times18+3)=171.
+ \end{aligned}
+ \label{eq:counts}
+ \end{equation}
+-
+-The counts given here are scalar measures for specified structures. They are not interchangeable definitions of model size, and the difference between 39 and 3,824,760 reflects a boundary difference rather than a difference in measurement.
+-
+-One substitution requires verification. Averaging five softmax outputs is not generally equivalent to applying softmax to averaged coefficients. Deploying a single head would therefore change the prediction procedure unless prediction equivalence were established.
+-
+-\subsection{Uncounted State}
+-
+-Beyond the counted structures, the inventory remains open rather than being zero. This distinction matters, because an unmeasured quantity may be interpreted as small.
+-
+-The fitted vectorizers preserve vocabulary mappings and IDF arrays for 254,983 features. Neither is serialized, so neither can be assigned a size.
+-
+-The five logistic regression fits are not serialized either. Therefore, the subtotal in Equation~\ref{eq:counts} represents a replay inventory rather than an observed memory occupancy. It provides a structural lower bound that cannot be converted into bytes without the specific dtypes, encodings, and the artifacts themselves.
+-
+-CNB, SVC, and SGD each contribute five outer calibrated objects. Internal three-fold calibration can retain multiple fitted classifiers and calibration functions per object~\cite{pedregosa2011scikit}. Given that library versions and fitted objects are unavailable, we make no claim of a complete system total, and the unrecorded realized \texttt{char\_wb} width prevents an exact CNB inventory in any event.
+-
+-No serialized artifact, RAM figure, latency measurement, or benchmark is available for the complete predictor. A defensible comparison would use the same boundary for every candidate, since parameters, fitted state, serialized bytes, peak RAM, latency, and energy are distinct quantities that do not substitute for one another~\cite{henderson2020systematic}.
+-\subsection{The Recorded Profile}
+-
+-The output \texttt{Manual NOP: 39} is a tensor-element fallback for one head, not a successful full-pipeline profile. It excludes vectorization, base prediction, calibration, and fold averaging. The fitted vectorizers, base estimators, and checkpoint bytes are unavailable. Recovering all prediction-time components and verifying raw-text prediction equivalence after fresh-process loading are prerequisites for a reproducible resource claim~\cite{pineau2021reproducibility}. This audit identifies a scope mismatch; it measures no deployment advantage.
+-
+-\subsection{Score Provenance}
+-
+-Five kinds of score appear in or around this artifact, and they must be kept apart.
+-
+-Three are calculations on one reconstructed value. With $F = 0.5295466327432113$, $N = 39$, and $\epsilon = 5 \times 10^{-16}$, the notebook implements $S_{\mathrm{local}} = F/(N + \epsilon) = 0.0135781187883$. An earlier manuscript equation, $0.4F + 0.6/[\ln(N+1) + \epsilon]$, gives $0.3744696715064$. An earlier diagram, $F/\log_{10}(N+1)$, gives $0.3305410756212$. All three are arithmetic on the same $F$, not measured outcomes.
+-
+-Two are external. The user reported leaderboard values are 0.37286 public and 0.37500 private (X). The official scoring contract is unknown.
+-
+-The local score carries no information beyond $F$ itself. The local table assigns $N = 39$ to all six candidates, including classifiers whose predictions never pass through that head. Ranking by $S_{\mathrm{local}}$ is therefore exactly ranking by $F$, and the parameter term contributes nothing to the ordering.
+-
+-Neither leaderboard value can be $S_{\mathrm{local}}$. Since $0 \leq F \leq 1$, the ratio satisfies $S_{\mathrm{local}} \leq 1/39 \approx 0.0256$, which is below both reported values.
+-
+-Inverting the weighted expression instead yields $F_{\mathrm{public}} \approx 0.5255$ and $F_{\mathrm{private}} \approx 0.5309$. Their proximity to the recorded 0.5295 verifies nothing. A formula that reproduces the scale of an external number has not thereby identified its meaning, and comparing 0.5295 with 0.37286 does not establish a generalization drop.
+-
+-\section{Corrected Prospective Evaluation}
++These are arithmetic scalar inventories for specified matrices (A), not measured memory occupancy or a complete contest NOP. Coefficients for SVC and SGD, CNB state, calibrators, LightGBM trees, vocabularies, and IDF arrays remain outside this subtotal. Internal calibration can retain multiple fitted classifiers/functions per outer object; historical defaults and fitted internals are unknown~\cite{pedregosa2011scikit}.
++
++No complete serialized artifact, peak RAM measurement, raw-text inference latency, or energy benchmark is available. Parameter counts, fitted state, serialized bytes, RAM, latency, and energy are distinct quantities~\cite{henderson2020systematic}. Averaging stored probability arrays is not a deployable substitute for the models needed to generate probabilities for unseen text. A resource comparison must apply the same declared boundary to every candidate.
++
++\subsection{Fractional Export Values Are Not Measurements}
++The main exported value rounds $F/2.9$ to three decimal places (S), producing 0.183 (R). It depends on a target score rather than on any model structure. A number of scalar parameters is a cardinality; 0.183, 0.1, and 0.3 are not measured counts. Zero is a valid count for the separate identity module, but it does not establish that a fitted ensemble has no state. No efficiency or compliance conclusion is supported by these exports.
++
++With reconstructed $F=0.5314177984731835$ and $\epsilon=5\times10^{-16}$, the local ratio $F/(N+\epsilon)$ yields approximately $1.0628\times10^{15}$ at $N=0$ and 2.9039 at $N=0.183$ (A). These are arithmetic consequences of assigned denominators, not achieved leaderboard outcomes. The construction chooses a denominator near the desired ratio by design; it does not discover an efficient model.
++
++\subsection{Authoritative Scoring Remains Unresolved}
++The supplied details document presents $0.4F+0.6/[\log(N+1)+\epsilon]$ in its evaluation section, without specifying the log base, but later quotes $F/(N+\epsilon)$ in related-work notes. The original formula image and official scoring implementation are absent, and the pasted competition text omits the equation itself. The notebook implements the ratio for score projections; this is source evidence of a local formula, not verification of the competition contract.
++
++The recorded figure combines earlier public values 0.24877, 0.25711, and 0.37286 with current OOF F1 0.5314 on an axis called ``Score / F1.'' These quantities have different provenance and do not form a verified generalization trajectory. An earlier private value 0.37500 is also unverified (X). Neither numerical proximity to a weighted formula nor a projected ratio authenticates leaderboard semantics. A definitive compliance statement requires the original parameter-count boundary and scorer; this audit alleges no organizer decision or verified competition violation.
++
++\section{Corrected Prospective Protocol}
+ \label{sec:discussion}
+-
+-The recorded ordering describes a development record, not a successful stacking experiment. A predictive advantage for the selected procedure is \notestablished{}. Since Meta-LR and TinyLinear both compute affine scores on the same twelve inputs, a matched comparison should evaluate procedures rather than credit a PyTorch module. Every item below is \needexp{}; data access and annotation definitions are \verifyauthor{}.
+-
+-Before splitting, the dataset must be hashed, the label mapping identified, near duplicates inspected, and dependent units determined. The procedure should be frozen before a rerun and prior exposure to this corpus disclosed.
+-
+-Let $E_a$ be an outer evaluation partition and $T_a = I \setminus E_a$. Every data dependent operation producing predictions on $E_a$ must be fitted on $T_a$ only. Moving the TF-IDF fits inside $T_a$ is not sufficient, since the path in Equation~\ref{eq:path} reopens if inner validation reuses its own assessment set. The whole pipeline, including base out of fold features, must be rebuilt within each inner fitting subset, with checkpoints selected inside $T_a$.
+-
+-Predictive comparisons require (A) the fully nested procedure and (B) standalone LR against fixed averaging, Meta-LR, and TinyLinear on identical partitions. Component and calibration claims require (C) marker family removals, (D) single branch against combined representations, and (E) Brier score, log loss, and binned reliability. Resource claims require (F) a fresh process reload reporting prediction equivalence, bytes, peak RAM, and latency. Claims relative to pretrained models require (G) a pretrained checkpoint on the same partitions. Population claims require (H) frozen-system evaluation on an untouched, appropriately sampled labeled set with verified annotations. Row level outputs must preserve identifiers, class ordering, probabilities, and fold indices. These are prospective extensions; they are not experiments performed by this audit.
+-
+-\section{Limitations and Scope of Claims}
++The recorded ordering describes a development record, not a successful controlled ensemble experiment. The corrective protocol below is prospective (P); no listed training or benchmarking study was run by this audit. The artifact checks already performed should not be confused with these experiments.
++
++First, freeze the dataset bytes, official label mapping, independent sampling units, and authorized use conditions. Inspect exact and near duplicates before splitting, and group or separate dependent posts where the intended evaluation requires it. Document prior exposure to the data. Hash inputs, record fold indices, and preserve the intended test IDs without importing the larger four-class data by filename alone.
++
++Second, choose an outer assessment partition $E_a$ and training partition $T_a=I\setminus E_a$. Every data-dependent operation producing predictions on $E_a$ must use only $T_a$: vocabularies, IDF, class weights, base fitting, calibration, LightGBM stopping, meta fitting, ensemble weighting, threshold choice, and candidate selection. Base OOF features must be rebuilt within each permitted inner fitting subset rather than borrowed from a global OOF matrix. Stopping and selection need partitions within $T_a$; outer labels remain inaccessible until the complete predictor is frozen.
++
++Third, compare standalone LR, a prespecified average, outcome-weighted averaging, and Meta-LR on identical allowed partitions, with stated tuning budgets. Each inference object must match the evaluated procedure: if deployment averages folds, assess that averaging procedure on untouched labels, rather than treating a row's single held-out fit as interchangeable. Save identifiers, true labels, probabilities, predictions, class ordering, and fold indices for valid paired analysis.
++
++Fourth, tie additional experiments to the claims they would support. Marker-family and representation ablations are necessary for claims of feature benefit. Proper scores and reliability diagnostics are necessary for calibration claims. A permitted pretrained checkpoint on the same partitions is necessary for comparisons with transformers. Contextual error and subgroup studies, verified annotations, and an appropriate sampling frame are necessary for population or moderation claims. None follows from an aggregate OOF score alone.
++
++Fifth, serialize and reload the complete raw-text prediction pipeline in a fresh process. Verify probability and label equivalence before reporting component sizes, total bytes, peak RAM, and latency with hardware, batch size, warmup, and repeated measurements~\cite{pineau2021reproducibility}. State training costs separately from inference. Store library versions, fitted calibration objects, LightGBM stopping points, and ensemble weights. Define any contest NOP according to its authoritative rules, and do not solve a score equation for a nominal count.
++
++Finally, maintain a claim ledger linking each result to source operations, original outputs, measurement boundaries, and limitations. Keep the current notebook, older submissions, and archived drafts distinguishable. A source correction, a successful CSV save, a portal receipt, and a leaderboard measurement are separate evidence events.
++
++\section{Limitations and Responsible Interpretation}
+ \label{sec:limitations}
+-
+-The original procedure supplies no untouched final evaluation, transformer comparison, ablation, calibration measurement, or resource benchmark, so the corrective study remains \needexp{}. The reconstruction has different limits: outputs cannot be authenticated against raw inputs, so internal consistency is not data authenticity, and unknown package versions leave complete replay \notestablished{}.
+-
+-The threats are distinct in kind. \emph{Internal}, because fitting and selection use evaluation information. \emph{External}, because one artifact supports no general claim. \emph{Construct}, because label names lack an annotation manual. \emph{Statistical}, because folds are dependent. \emph{Measurement}, because one countable component differs from the full prediction path.
+-
+-The three way argmax is a research label, not a moderation policy, since substring matching fires inside benign words and identity named cues do not model whether a speaker endorses, condemns, quotes, or reclaims an expression~\cite{blodgett2020language,rottger2021hatecheck}. No deployment policy is supported, \notestablished{}; a contextual error study remains \needexp{}; no legal basis, consent, or ethics approval is asserted: \verifyauthor{}.
++The updated source and retained outputs are inspectable, and the supplied CSVs agree with its printed supports. However, no hash recorded during the historical run establishes that those exact bytes were used. The audit does not rerun training, recover missing OOF rows, inspect fitted model states, or verify a platform submission. Unknown package versions and contradictory device metadata limit replay. Exact-string duplication is checked; semantic duplicates and shared-user/thread structure are not.
++
++The threats are distinct: internal, because fitting and selection use evaluation information; external, because one record does not establish a population claim; construct-related, because label definitions lack a complete annotation manual; statistical, because folds and selection outcomes are dependent; and measurement-related, because the counted identity object differs from the selected predictor. Neither the direction of score distortion nor deployment cost is measured.
++
++The three-way argmax is a research prediction, not a moderation policy. Substring matching can activate inside benign words, and identity-related cues do not model whether a speaker endorses, condemns, quotes, or reclaims an expression~\cite{blodgett2020language,rottger2021hatecheck}. No operating threshold, contextual safety, appeal process, or deployment benefit has been established. No legal basis, consent, ethics approval, or independent redistribution permission is inferred from public-source collection or from a supplied license description.
+ 
+ \section{Conclusion}
+ \label{sec:conclusion}
+-
+-This case study reconstructs a recorded harmful content classifier built from three sparse TF-IDF branches, four probability producing classical families, and alternative linear stackers. Its 47,817 training examples, 254,983 feature dimensions, and selected pooled out of fold macro-F1 of 0.5295 belong to one stored development record. They do not establish a generalization advantage over the recorded LR value of 0.5246.
+-
+-Three findings transfer. One head contains 39 scalar parameters while the test procedure averages five heads over substantial upstream state. Row level out of fold exclusion cannot establish complete procedure isolation when evaluation labels remain ancestors of meta training features. An external score's proximity to one formula does not verify its semantics.
+-
+-Every predictive or efficiency claim should therefore name the inference object, its fitting and selection ancestry, its measurement boundary, and the evidence connecting them. Until an independent evaluation tests that ordering, this remains an inspectable methodological case, not a validated deployment system.
++This case study reconstructs the updated LightBanglaHC record: 47,817 training rows, four fitted TF-IDF branches, six base candidates, a Meta-LR component, and a selected weighted ensemble. Its reconstructed macro-F1 0.531418 agrees with the notebook's 0.5314; the rounded comparison with LR\_C3 at 0.5221 remains descriptive. The original five-fold TinyLinear numbers and supplied NOP-39 CSV belong to other versions and cannot verify this execution.
++
++Three findings transfer. Row-level OOF exclusion does not isolate a full procedure when evaluation labels remain ancestors of meta-training features, stopping choices, or combination weights. A zero-parameter identity operation does not account for the fitted state that produces harmful-content predictions. A fractional denominator selected to achieve a desired score is not a parameter measurement. Every predictive or efficiency claim should name its inference object, fitting and selection ancestry, accounting boundary, and supporting evidence. This remains an inspectable methodological case, not a validated deployment system.
+ 
+ \subsubsection*{Disclosure of Interests.}
+-Funding sources, competing interests, ethics review or exemption status, data
+-permissions, annotator-welfare documentation, acknowledgements, and the
+-generative-AI disclosure required by the venue are \verifyauthor; absence of
+-supplied information is not a declaration of no funding or no competing
+-interests. This revision used AI-assisted literature organization, drafting,
+-arithmetic checking, and typesetting, creating no new training results and
+-authorizing no data use.
+-
++Funding, competing interests, ethics review or exemption, data permissions, and annotator-welfare information were not supplied with the inspected artifacts. This is not a declaration of no funding or no interests; authors must finalize applicable disclosures before submission. This revision used AI-assisted literature organization, drafting, source inspection, arithmetic checking, and typesetting. It produced no new training results and authorized no data use.
+ 
+ \bibliographystyle{ijcvsplatex-num}
+ \bibliography{references}
+-
+ \end{document}
