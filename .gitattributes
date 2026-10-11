@@ -1,3 +1,16 @@
+# Preserve supplied raw bytes and template line endings.
+data/**/*.csv -text
+notebooks/*.ipynb -text
+archives/** -text
+paper/iciev/*.cls -text
+paper/iciev/*.bst -text
+paper/iciev/*.sty -text
+*.zip binary
+*.pdf binary
+*.docx binary
+*.png binary
+*.eps -text
+
 # Preserve the supplied template bytes, including vendor line endings/spacing.
 submission_revision/paper/*.sty whitespace=-blank-at-eol,cr-at-eol
 submission_revision/paper/*.bst whitespace=-blank-at-eol,-blank-at-eof
