@@ -17,3 +17,16 @@ revision_2026-10-11/paper/*.blg
 revision_2026-10-11/paper/*.fls
 revision_2026-10-11/paper/*.fdb_latexmk
 revision_2026-10-11/paper/*.out
+
+# Current paper build intermediates and separate author reruns.
+paper/iciev/*.spl
+submission_revision/paper/*.aux
+submission_revision/paper/*.bbl
+submission_revision/paper/*.blg
+submission_revision/paper/*.log
+submission_revision/paper/*.fls
+submission_revision/paper/*.fdb_latexmk
+submission_revision/paper/*.out
+submission_revision/paper/*.spl
+submission_revision/paper/*.synctex.gz
+independent_replication_results/

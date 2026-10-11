@@ -12,7 +12,7 @@ REVISION = ROOT / 'revision_2026-10-11'
 
 def verify(probabilities=False):
     paper = ROOT / 'paper/iciev'
-    manuscript = (paper / 'main.tex').read_text()
+    manuscript = '\n'.join(path.read_text() for path in paper.glob('*.tex'))
     references = (paper / 'references.bib').read_text()
     citation_keys = set()
     for group in re.findall(r'\\cite\w*\*?(?:\[[^]]*\])?\{([^}]+)\}', manuscript):
@@ -46,7 +46,9 @@ def verify(probabilities=False):
             raise ValueError('Corrupt source ZIP')
         for name in ['main.tex', 'main_anonymized.tex', 'references.bib',
                      'ijcvsplatex.cls', 'ijcvsplatex-num.bst', 'LogoIJCVSP.pdf',
-                     'main.pdf', 'main_anonymized.pdf']:
+                     'main.pdf', 'main_anonymized.pdf', 'supplement.tex', 'supplement.pdf',
+                     'new-evidence.tex', 'supplement-summary.tex', 'convergence-table.tex',
+                     'ledger-table.tex']:
             if bundle.read(name) != (paper / name).read_bytes():
                 raise ValueError('Stale Overleaf file: ' + name)
     if probabilities:

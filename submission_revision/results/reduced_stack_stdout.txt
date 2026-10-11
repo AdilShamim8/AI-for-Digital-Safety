@@ -1,0 +1,101 @@
+OUTER BASE 1
+feature branch 1 fit rows 31878
+OUTER BASE OUTER BASE 3
+feature branch 21 
+fit rowsfeature branch  318781
+ fit rows 31878
+feature branch 2 fit rows 31878
+feature branch 2 fit rows 31878
+feature branch 2 fit rows 31878
+feature branch 3 fit rows 31878
+feature branch 3 fit rows 31878
+feature branch 3 fit rows 31878
+feature branch 4 fit rows 31878
+feature branch 4 fit rows 31878
+feature branch 4 fit rows 31878
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+OUTER COMPLETE 1 {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [12, 25], "fit_seconds": 523.5464984600003, "fold": 1, "widths": [100000, 80000, 50000, 100]}
+OUTER COMPLETE 2 {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [12, 23], "fit_seconds": 524.3199232239995, "fold": 2, "widths": [100000, 80000, 50000, 97]}
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+OUTER COMPLETE 3 {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [22, 12], "fit_seconds": 560.9189343879998, "fold": 3, "widths": [100000, 80000, 50000, 103]}
+NONNESTED F1 0.5171442878303846
+NESTED OUTER 1
+NESTED OUTER 2
+NESTED OUTER 3
+INNER 1 1
+feature branch 1 fit rows 21252
+INNER INNER3 1
+feature branch 1  fit rows 221252 1
+feature branch 1 
+fit rows 21252
+feature branch 2 fit rows 21252
+feature branch 2 fit rows 21252
+feature branch 2 fit rows 21252
+feature branch 3 fit rows 21252
+feature branch 3 fit rows 21252
+feature branch 3 fit rows 21252
+feature branch 4 fit rows 21252
+feature branch 4 fit rows 21252
+feature branch 4 fit rows 21252
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+INNER COMPLETE 3 1 {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [13, 13], "fit_seconds": 351.74843083999986, "inner_fold": 1, "widths": [100000, 80000, 50000, 98]}
+INNER 3 2
+feature branch 1 fit rows 21252
+feature branch 2 fit rows 21252
+feature branch 3 fit rows 21252
+feature branch 4 fit rows 21252
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+INNER COMPLETE 2 1 {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [13, 13], "fit_seconds": 367.3394087380002, "inner_fold": 1, "widths": [100000, 80000, 50000, 92]}
+INNER 2 2
+feature branch 1 fit rows 21252
+feature branch 2 fit rows 21252
+feature branch 3 fit rows 21252
+feature branch 4 fit rows 21252
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+INNER COMPLETE 1 1 {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [12, 14], "fit_seconds": 379.40205853000043, "inner_fold": 1, "widths": [100000, 80000, 50000, 95]}
+INNER 1 2
+feature branch 1 fit rows 21252
+feature branch 2 fit rows 21252
+feature branch 3 fit rows 21252
+feature branch 4 fit rows 21252
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+INNER COMPLETE 3 2 {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [13, 13], "fit_seconds": 348.73178956599895, "inner_fold": 2, "widths": [100000, 80000, 50000, 96]}
+INNER 3 3
+feature branch 1 fit rows 21252
+feature branch 2 fit rows 21252
+feature branch 3 fit rows 21252
+feature branch 4 fit rows 21252
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+INNER COMPLETE 2 2 {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [13, 13], "fit_seconds": 350.11541949, "inner_fold": 2, "widths": [100000, 80000, 50000, 94]}
+INNER 2 3
+feature branch 1 fit rows 21252
+feature branch 2 fit rows 21252
+feature branch 3 fit rows 21252
+feature branch 4 fit rows 21252
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+INNER COMPLETE 1 2 {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [13, 13], "fit_seconds": 355.090668363001, "inner_fold": 2, "widths": [100000, 80000, 50000, 99]}
+INNER 1 3
+feature branch 1 fit rows 21252
+feature branch 2 fit rows 21252
+feature branch 3 fit rows 21252
+feature branch 4 fit rows 21252
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+INNER COMPLETE 3 3 {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [14, 13], "fit_seconds": 378.91294858699985, "inner_fold": 3, "widths": [100000, 80000, 50000, 102]}
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+INNER COMPLETE 2 3 {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [13, 13], "fit_seconds": 368.19292184000005, "inner_fold": 3, "widths": [100000, 80000, 50000, 96]}
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+INNER COMPLETE 1 3 {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [13, 12], "fit_seconds": 404.15665767099927, "inner_fold": 3, "widths": [100000, 80000, 50000, 94]}
+{"status": "completed", "evidence": "N: assistant-executed new run; not an author-independent rerun", "environment": {"python": "3.12.14", "numpy": "2.3.5", "pandas": "2.2.3", "scipy": "1.17.0", "sklearn": "1.8.0"}, "train_sha256": "a269ad841f824c6e60930cfda8cb25bdce58a6a1ee01fc1fe663d23b19e34449", "script_sha256": "a9ca9e0c8eb82005d264088cedcb1bc0e8c8c4515dc0289e8bfdce78dcc2ed14", "base_order": ["LR_C3", "SGD", "CNB"], "outer_inference": "one base fit on all outer training rows, identical outer base probabilities in both arms", "feature_and_weight_scope": "each permitted base fitting subset; meta weights from outer training labels", "outer_folds": 3, "inner_folds": 3, "seed": 42, "base_max_iter": 2000, "meta_max_iter": 500, "calibration_cv": 2, "calibration_ensemble": true, "base_records": [{"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [12, 25], "fit_seconds": 523.5464984600003, "fold": 1, "widths": [100000, 80000, 50000, 100]}, {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [12, 23], "fit_seconds": 524.3199232239995, "fold": 2, "widths": [100000, 80000, 50000, 97]}, {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [22, 12], "fit_seconds": 560.9189343879998, "fold": 3, "widths": [100000, 80000, 50000, 103]}], "nested_records": [{"outer_fold": 3, "inner_base_records": [{"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [13, 13], "fit_seconds": 351.74843083999986, "inner_fold": 1, "widths": [100000, 80000, 50000, 98]}, {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [13, 13], "fit_seconds": 348.73178956599895, "inner_fold": 2, "widths": [100000, 80000, 50000, 96]}, {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [14, 13], "fit_seconds": 378.91294858699985, "inner_fold": 3, "widths": [100000, 80000, 50000, 102]}], "meta_n_iter": [40]}, {"outer_fold": 2, "inner_base_records": [{"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [13, 13], "fit_seconds": 367.3394087380002, "inner_fold": 1, "widths": [100000, 80000, 50000, 92]}, {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [13, 13], "fit_seconds": 350.11541949, "inner_fold": 2, "widths": [100000, 80000, 50000, 94]}, {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [13, 13], "fit_seconds": 368.19292184000005, "inner_fold": 3, "widths": [100000, 80000, 50000, 96]}], "meta_n_iter": [43]}, {"outer_fold": 1, "inner_base_records": [{"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [12, 14], "fit_seconds": 379.40205853000043, "inner_fold": 1, "widths": [100000, 80000, 50000, 95]}, {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [13, 13], "fit_seconds": 355.090668363001, "inner_fold": 2, "widths": [100000, 80000, 50000, 99]}, {"lr_n_iter": [2000], "lr_cap_reached": true, "sgd_iterations": [13, 12], "fit_seconds": 404.15665767099927, "inner_fold": 3, "widths": [100000, 80000, 50000, 94]}], "meta_n_iter": [43]}], "elapsed_seconds": 1808.4671410699993, "nonnested_macro_f1": 0.5171442878303846, "nested_macro_f1": 0.5156904848731436, "nonnested_minus_nested": 0.0014538029572409572}

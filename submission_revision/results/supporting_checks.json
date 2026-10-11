@@ -1,0 +1,94 @@
+{
+  "evidence": "N: assistant executed; not an author-independent replication",
+  "raw": {
+    "groups": 461,
+    "rows": 1082,
+    "extra_rows": 621,
+    "cross_fold_groups": 308,
+    "cross_fold_rows": 771,
+    "cross_fold_row_percent": 1.6123972645711777,
+    "conflicting_groups": 52,
+    "conflicting_rows": 130,
+    "conflicting_row_percent": 0.2718698370872284,
+    "conflicting_cross_fold_groups": 36
+  },
+  "notebook_cleaner": {
+    "groups": 495,
+    "rows": 1200,
+    "extra_rows": 705,
+    "cross_fold_groups": 336,
+    "cross_fold_rows": 880,
+    "cross_fold_row_percent": 1.840349666436623,
+    "conflicting_groups": 67,
+    "conflicting_rows": 200,
+    "conflicting_row_percent": 0.41826128782650523,
+    "conflicting_cross_fold_groups": 49
+  },
+  "cleaner_group_split": {
+    "groups": 495,
+    "rows": 1200,
+    "extra_rows": 705,
+    "cross_fold_groups": 0,
+    "cross_fold_rows": 0,
+    "cross_fold_row_percent": 0.0,
+    "conflicting_groups": 67,
+    "conflicting_rows": 200,
+    "conflicting_row_percent": 0.41826128782650523,
+    "conflicting_cross_fold_groups": 0
+  },
+  "excluded_raw_crossfold_rows": 771,
+  "retained_rows": 47046,
+  "group_fold_class_supports": [
+    [
+      7919,
+      6054,
+      1966
+    ],
+    [
+      7918,
+      6055,
+      1966
+    ],
+    [
+      7919,
+      6054,
+      1966
+    ]
+  ],
+  "bootstrap": {
+    "conditioning": "Fixed OOF predictions; training is not resampled. Does not resolve overlapping training folds or user/thread dependence.",
+    "global_macro_f1": 0.5220608956637554,
+    "fold_macro_f1": 0.5188715615569914,
+    "difference": 0.003189334106763919,
+    "stratified_row_replicates": 5000,
+    "seed": 42,
+    "stratified_row_percentile95": [
+      0.0008080634948867543,
+      0.005642874210533185
+    ],
+    "exact_raw_text_cluster_replicates": 2000,
+    "exact_raw_text_cluster_percentile95": [
+      0.0008022200428429189,
+      0.005558287279927472
+    ],
+    "cluster_unit": "Unique exact raw text; conflicting labels remain together; corpus size can change across resamples."
+  },
+  "raw_excluded_resplit_duplicates": {
+    "groups": 153,
+    "rows": 311,
+    "extra_rows": 158,
+    "cross_fold_groups": 101,
+    "cross_fold_rows": 206,
+    "cross_fold_row_percent": 0.43786931938953366,
+    "conflicting_groups": 16,
+    "conflicting_rows": 34,
+    "conflicting_row_percent": 0.07226969349147642,
+    "conflicting_cross_fold_groups": 14
+  },
+  "file_hashes": {
+    "/workspace/scratch/97db31ce82f3/publication-revision/data/herwill_2026/train.csv": "a269ad841f824c6e60930cfda8cb25bdce58a6a1ee01fc1fe663d23b19e34449",
+    "/workspace/scratch/97db31ce82f3/publication-revision/audit/updated_notebook_source.py": "b1bf6978a045cb0abed587b7f2924095432098173497e4a6c29d7014588ebf4d",
+    "/workspace/scratch/97db31ce82f3/publication-revision/revision_2026-10-11/audit/lr_comparison/global_oof.npz": "78dd2758341b83f9050ae462ea8648a325999943c58bc7c052b27f1026fedb79",
+    "/workspace/scratch/97db31ce82f3/publication-revision/revision_2026-10-11/audit/lr_comparison/within_fold_oof.npz": "1f508fb4b7ce489bb139f0facc7f0d7e53d607258d5a1aa6f8309dc9b9458da0"
+  }
+}

@@ -1,0 +1,16 @@
+feature branchfeature branch 1 fit rows 31367
+ 1 fit rows 31358
+feature branch 2 fit rows 31367
+feature branch 2 fit rows 31358
+feature branch 3 fit rows 31367
+feature branch 3 fit rows 31358
+feature branch 4 fit rows 31367
+feature branch 4 fit rows 31358
+{"fold": 2, "n_iter": [471], "hit_iteration_limit": false, "penalized_objective_gradient_max_abs": 9.314751281685068e-07, "fit_seconds": 89.1203419909998, "rows_train": 31367, "rows_assessment": 15679, "widths": [100000, 80000, 50000, 97]}
+feature branch 1 fit rows 31367
+feature branch 2 fit rows 31367
+feature branch 3 fit rows 31367
+{"fold": 1, "n_iter": [513], "hit_iteration_limit": false, "penalized_objective_gradient_max_abs": 9.852699721567816e-07, "fit_seconds": 101.77682439099954, "rows_train": 31358, "rows_assessment": 15688, "widths": [100000, 80000, 50000, 100]}
+feature branch 4 fit rows 31367
+{"fold": 3, "n_iter": [526], "hit_iteration_limit": false, "penalized_objective_gradient_max_abs": 9.376341765690677e-07, "fit_seconds": 82.55657886500012, "rows_train": 31367, "rows_assessment": 15679, "widths": [100000, 80000, 50000, 103]}
+{"status": "completed", "evidence": "N: assistant execution; not author-independent replication", "policy": "Remove all 771 rows in original spanning raw-text groups; retain original seed-42 stratified fold IDs on remaining rows. No resplit.", "rows": 47046, "excluded_rows": 771, "raw_cross_fold_groups_after_exclusion": 0, "C": 3, "solver": "lbfgs", "tol": 1e-06, "max_iter": 2000, "class_weight_scope": "per retained training subset", "folds": [{"fold": 1, "n_iter": [513], "hit_iteration_limit": false, "penalized_objective_gradient_max_abs": 9.852699721567816e-07, "fit_seconds": 101.77682439099954, "rows_train": 31358, "rows_assessment": 15688, "widths": [100000, 80000, 50000, 100]}, {"fold": 2, "n_iter": [471], "hit_iteration_limit": false, "penalized_objective_gradient_max_abs": 9.314751281685068e-07, "fit_seconds": 89.1203419909998, "rows_train": 31367, "rows_assessment": 15679, "widths": [100000, 80000, 50000, 97]}, {"fold": 3, "n_iter": [526], "hit_iteration_limit": false, "penalized_objective_gradient_max_abs": 9.376341765690677e-07, "fit_seconds": 82.55657886500012, "rows_train": 31367, "rows_assessment": 15679, "widths": [100000, 80000, 50000, 103]}], "script_sha256": "8e5813a289908cd81b1ba9c78798bfff2df99a94065b99319f4fed26161853d8", "elapsed_seconds": 229.43674072700014, "macro_f1": 0.5184430869527191}

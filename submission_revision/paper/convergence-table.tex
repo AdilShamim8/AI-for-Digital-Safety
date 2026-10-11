@@ -1,0 +1,15 @@
+\begin{table*}[t]
+\small\centering
+\caption{LBFGS sensitivity diagnostics (N). The maximum absolute gradient is for the class-weight-normalized penalized objective. No fit reaches its 2,000-iteration cap.}
+\begin{tabular}{lrrr}
+\toprule
+Arm & Pooled macro-F1 & Iterations (folds 1/2/3) & Largest objective gradient \\
+\midrule
+Global TF-IDF & 0.523143 & 543/506/537 & 7.389e-07 \\
+Fold-fitted TF-IDF & 0.521393 & 529/506/531 & 9.761e-07 \\
+Cleaner-group split & 0.519044 & 538/533/501 & 9.638e-07 \\
+Raw cross-fold rows excluded & 0.517604 & 503/508/511 & 8.232e-07 \\
+Exclusion, original folds & 0.518443 & 513/471/526 & 9.853e-07 \\
+\bottomrule
+\end{tabular}
+\end{table*}
