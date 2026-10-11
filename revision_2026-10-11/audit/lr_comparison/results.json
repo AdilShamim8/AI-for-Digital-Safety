@@ -1,0 +1,143 @@
+{
+  "status": "completed",
+  "environment": {
+    "python": "3.12.14",
+    "sklearn": "1.8.0",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "pandas": "2.2.3",
+    "cpu_count": 9
+  },
+  "scope": "Full-data new-run comparison; historical package versions unknown; global class weights held fixed",
+  "arms": {
+    "global": {
+      "folds": [
+        {
+          "fold": 1,
+          "macro_f1": 0.5208592630355872,
+          "widths": [
+            100000,
+            80000,
+            50000,
+            105
+          ],
+          "n_iter": [
+            2000
+          ],
+          "fit_seconds": 525.1089869910002,
+          "hit_iteration_limit": true,
+          "warnings": [
+            "iteration limit reached; inspect convergence"
+          ]
+        },
+        {
+          "fold": 2,
+          "macro_f1": 0.5171215547269231,
+          "widths": [
+            100000,
+            80000,
+            50000,
+            105
+          ],
+          "n_iter": [
+            2000
+          ],
+          "fit_seconds": 492.7839981489999,
+          "hit_iteration_limit": true,
+          "warnings": [
+            "iteration limit reached; inspect convergence"
+          ]
+        },
+        {
+          "fold": 3,
+          "macro_f1": 0.5280681992558808,
+          "widths": [
+            100000,
+            80000,
+            50000,
+            105
+          ],
+          "n_iter": [
+            2000
+          ],
+          "fit_seconds": 539.0308092329999,
+          "hit_iteration_limit": true,
+          "warnings": [
+            "iteration limit reached; inspect convergence"
+          ]
+        }
+      ],
+      "completed": true,
+      "global_widths": [
+        100000,
+        80000,
+        50000,
+        105
+      ],
+      "pooled_macro_f1": 0.5220608956637554
+    },
+    "within_fold": {
+      "folds": [
+        {
+          "fold": 1,
+          "macro_f1": 0.5212906145741308,
+          "widths": [
+            100000,
+            80000,
+            50000,
+            100
+          ],
+          "n_iter": [
+            2000
+          ],
+          "fit_seconds": 511.60792051199996,
+          "hit_iteration_limit": true,
+          "warnings": [
+            "iteration limit reached; inspect convergence"
+          ]
+        },
+        {
+          "fold": 2,
+          "macro_f1": 0.5111432309513625,
+          "widths": [
+            100000,
+            80000,
+            50000,
+            97
+          ],
+          "n_iter": [
+            2000
+          ],
+          "fit_seconds": 514.1465424380001,
+          "hit_iteration_limit": true,
+          "warnings": [
+            "iteration limit reached; inspect convergence"
+          ]
+        },
+        {
+          "fold": 3,
+          "macro_f1": 0.523993857602116,
+          "widths": [
+            100000,
+            80000,
+            50000,
+            103
+          ],
+          "n_iter": [
+            2000
+          ],
+          "fit_seconds": 499.52059891299996,
+          "hit_iteration_limit": true,
+          "warnings": [
+            "iteration limit reached; inspect convergence"
+          ]
+        }
+      ],
+      "completed": true,
+      "pooled_macro_f1": 0.5188715615569914
+    }
+  },
+  "train_sha256": "a269ad841f824c6e60930cfda8cb25bdce58a6a1ee01fc1fe663d23b19e34449",
+  "elapsed_seconds": 1121.1072241509999,
+  "global_minus_within_fold": 0.003189334106763919
+}

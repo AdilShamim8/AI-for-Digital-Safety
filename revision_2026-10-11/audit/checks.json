@@ -1,0 +1,149 @@
+{
+  "sklearn_version": "1.8.0",
+  "train_sha256": "a269ad841f824c6e60930cfda8cb25bdce58a6a1ee01fc1fe663d23b19e34449",
+  "duplicate_groups": 461,
+  "duplicate_group_rows": 1082,
+  "repeats_beyond_first": 621,
+  "cross_fold_duplicate_groups": 308,
+  "cross_fold_duplicate_rows": 771,
+  "cross_fold_repeats_beyond_first": 463,
+  "conflicting_label_groups": 52,
+  "conflicting_label_rows": 130,
+  "cross_fold_conflicting_groups": 36,
+  "fold_supports": [
+    [
+      7919,
+      6054,
+      1966
+    ],
+    [
+      7919,
+      6054,
+      1966
+    ],
+    [
+      7918,
+      6055,
+      1966
+    ]
+  ],
+  "submission": {
+    "shape": [
+      11955,
+      3
+    ],
+    "columns": [
+      "id",
+      "y_pred",
+      "parameters"
+    ],
+    "counts": {
+      "0": 6414,
+      "1": 4401,
+      "2": 1140
+    },
+    "parameters": [
+      0.183
+    ],
+    "ids_match_test": true,
+    "sha256": "2282e24132cf84e75dafe15a50ccba79b5ee9ce96e3755d3e2443deb34e3c4a2"
+  },
+  "ensemble": {
+    "rounded_scores": [
+      0.5169,
+      0.5221,
+      0.4824,
+      0.4391,
+      0.4691,
+      0.516,
+      0.5218
+    ],
+    "weights_rounded_input": [
+      0.15499096270489204,
+      0.15812505803772822,
+      0.1349919620791867,
+      0.11184593017522393,
+      0.1276509870787656,
+      0.15445170780699502,
+      0.15794339211720845
+    ],
+    "uniform": 0.14285714285714285,
+    "max_absolute_weight_deviation": 0.03101121268191892,
+    "observed_gap_rounded": 0.0008000000000000229
+  },
+  "global_class_weights": [
+    0.6709462872537464,
+    0.8775532676319991,
+    2.702441505595117
+  ],
+  "regenerated_fold_training_class_weights": [
+    [
+      0.6709604091684032,
+      0.8775291105789083,
+      2.702441505595117
+    ],
+    [
+      0.6709604091684032,
+      0.8775291105789083,
+      2.702441505595117
+    ],
+    [
+      0.6709180452077282,
+      0.877601585728444,
+      2.702441505595117
+    ]
+  ],
+  "max_relative_class_weight_difference": 5.506001541677463e-05,
+  "max_relative_class_weight_difference_percent": 0.005506001541677463,
+  "arithmetic_unchanged": {
+    "input_provenance": "updated notebook retained confusion figure; no historical prediction replay",
+    "confusion_matrix": [
+      [
+        16464,
+        6331,
+        961
+      ],
+      [
+        7502,
+        9039,
+        1622
+      ],
+      [
+        1360,
+        2292,
+        2246
+      ]
+    ],
+    "class_f1": [
+      0.6708773073631882,
+      0.5046196789951152,
+      0.41875640906124734
+    ],
+    "macro_f1": 0.5314177984731835,
+    "accuracy": 0.5803166237948847,
+    "one_base_lr_scalars_width_230105": 690318,
+    "six_base_lr_scalars_width_230105": 4141908,
+    "three_meta_lr_scalars_18_inputs": 171,
+    "local_ratio_at_zero": 1062835596946366.9,
+    "local_ratio_at_exported_fraction": 2.9039223960283174,
+    "target_derived_export": 0.183,
+    "three_major_training_sections_seconds": 9029.5
+  },
+  "confusion_matrix": [
+    [
+      16464,
+      6331,
+      961
+    ],
+    [
+      7502,
+      9039,
+      1622
+    ],
+    [
+      1360,
+      2292,
+      2246
+    ]
+  ]
+}

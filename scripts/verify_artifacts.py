@@ -103,7 +103,14 @@ def verify():
                   'metadata_papermill':updated['metadata']['papermill'],
                   'recorded_test_predictions':{'0':6414,'1':4401,'2':1140},
                   'recorded_main_export_nop':.183,'recorded_profiled_identity_nop':0,
-                  'generated_csvs_supplied':False,'fresh_prediction_replay_performed':False}
+                  'generated_csvs_supplied':True,'fresh_prediction_replay_performed':False}
+    new_cols, new_sub = csv_rows(data / 'submission_updated.csv')
+    assert new_cols == ['id','y_pred','parameters'] and len(new_sub)==11955
+    assert [r['id'] for r in new_sub] == [r['id'] for r in test]
+    new_predictions=dict(collections.Counter(r['y_pred'] for r in new_sub))
+    assert new_predictions == {'0':6414,'1':4401,'2':1140}
+    assert {r['parameters'] for r in new_sub} == {'0.183'}
+    current_info['supplied_updated_csv_check']={'sha256':sha256(data/'submission_updated.csv'),'predictions':new_predictions,'nop_field':.183,'ids_order_match':True,'historical_prediction_origin_authenticated':False}
     # Counts transcribed from the retained updated-notebook figure. No row-level replay.
     cm = [[16464,6331,961],[7502,9039,1622],[1360,2292,2246]]
     rows = [sum(r) for r in cm]
@@ -124,7 +131,7 @@ def verify():
                   "three_major_training_sections_seconds":2601.7+2625.0+3802.8}
     manuscript=(ROOT / "paper/iciev/main.tex").read_text()
     assert not any(m in manuscript for m in ["\\verifyauthor","\\needexp","\\notestablished","citationneeded"])
-    assert manuscript.count("\\begin{table") == 5
+    assert manuscript.count("\\begin{table") == 7
     assert manuscript.count("\\begin{equation}") == 6
     # Verify verbatim archive extraction and ZIP integrity.
     with zipfile.ZipFile(ROOT / "archives/her-will-ai-for-digital-safety-datathon-2026.zip") as z:
@@ -140,7 +147,7 @@ def verify():
             "larger_four_class_files":versions,"legacy_four_class_notebook":notebook_info,
             "updated_notebook":current_info,
             "manuscript_arithmetic":arithmetic,
-            "unresolved":["updated generated submission CSVs and row-level OOF probabilities not supplied",
+            "unresolved":["historical row-level OOF probabilities and fitted states not supplied; supplied updated CSV checked",
                           "authoritative scoring equation/log base and parameter-count boundary",
                           "updated fitted artifacts, historical runtime/package versions, and prediction replay",
                           "two coauthor names, emails/affiliations, author approval, and disclosures"]}

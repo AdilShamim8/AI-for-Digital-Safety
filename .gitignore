@@ -8,3 +8,12 @@ paper/iciev/*.fls
 paper/iciev/*.fdb_latexmk
 paper/iciev/*.out
 paper/iciev/*.synctex.gz
+
+# Generated delivery patch is included in download ZIPs, not duplicated in git.
+revision_2026-10-11/REVISION_PR.patch
+revision_2026-10-11/paper/*.aux
+revision_2026-10-11/paper/*.log
+revision_2026-10-11/paper/*.blg
+revision_2026-10-11/paper/*.fls
+revision_2026-10-11/paper/*.fdb_latexmk
+revision_2026-10-11/paper/*.out

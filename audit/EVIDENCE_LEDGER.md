@@ -1,3 +1,14 @@
+# Current revision evidence
+
+See revision_2026-10-11/audit/checks.json, audit/lr_comparison/results.json
+and docs/REVISION_REPORT.md within that revision folder. The updated CSV
+is now supplied and checked; the full-data paired LR comparison is complete.
+Historical fitted states, original scorer and nested-stack results remain
+unavailable. The original ledger below is a historical snapshot; its
+missing-CSV/no-new-training statements are superseded.
+
+---
+
 # Evidence ledger: updated notebook
 
 Canonical source: `notebooks/ai-for-digital-safety-101.ipynb`. The exact current

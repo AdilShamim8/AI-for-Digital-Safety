@@ -30,24 +30,37 @@
 \def\@revised{}
 \def\@accepted{}
 \def\@online{}
-\def\@vol{}
+\def\@vol{[TODO-AUTHOR: publisher metadata]}
 \patchcmd{\MaketitleBox}{Article History:}{}{}{}
+% Publication volume/year/pages are publisher-assigned, not author inventions.
+\def\ps@pprintTitle{\def\@oddhead{\footnotesize IJCVSP submission draft\hfill [TODO-AUTHOR: confirm header]}\let\@evenhead\@oddhead\let\@oddfoot\@empty\let\@evenfoot\@empty}
 \makeatother
+\fancyhead[RE]{IJCVSP submission draft}
+\newif\ifNamedCase
+\ifdefined\AnonymousCase\NamedCasefalse\else\NamedCasetrue\fi
+\newcommand{\CaseName}{\ifNamedCase LightBanglaHC\else the audited ensemble\fi}
+\newcommand{\CompetitionName}{\ifNamedCase the HerWILL AI for Digital Safety Datathon 2026\else a public datathon\fi}
+\newcommand{\AuthorTodo}[1]{\textbf{[TODO-AUTHOR:\allowbreak{} #1]}}
 \interdisplaylinepenalty=2500
 \emergencystretch=2em
 
 \begin{document}
 \begin{frontmatter}
 
-\title{\LARGE LightBanglaHC: Evaluation Validity, Inference Reconstruction, and Accounting Boundaries in Harmful-Content Classification}
+\ifNamedCase
+\title{\LARGE LightBanglaHC Audit: Evaluation Validity, Inference Reconstruction, and Accounting Boundaries in Harmful-Content Classification}
+\else
+\title{\LARGE An Audit of a TF-IDF Ensemble: Evaluation Validity, Inference Reconstruction, and Accounting Boundaries in Harmful-Content Classification}
+\fi
 
 % Anonymous review: all three author details are entered in CMT.
 % For the final author version, complete author-details.tex then uncomment:
 % \input{author-details}
 
 \begin{abstract}
-Evaluating the efficiency of a harmful content classifier requires separating a small prediction component from the complete pipeline that produces its inputs. We study this separation through a retrospective audit of the updated LightBanglaHC notebook for the HerWILL AI for Digital Safety Datathon 2026. Its recorded three-fold run uses 47,817 labeled training examples, 11,955 unlabeled test rows, four TF-IDF branches with 230,105 combined features, and 20 additional numerical features for LightGBM. Six base candidates and a logistic regression stacker feed a selected weighted ensemble with pooled out-of-fold macro-F1 0.5314, versus 0.5221 for the strongest base candidate. This gap is descriptive and does not establish superior generalization. Globally fitted transformations and class weights, nonnested meta validation, early stopping, outcome-derived ensemble weights, and threshold and candidate selection connect fitting to the reported scores. Source analysis shows why excluding each row from its own base fit does not isolate the complete procedure. The zero-parameter identity module is profiled separately and is absent from the selected prediction path. The exported value 0.183 is derived from a target score rather than a parameter measurement. Six base logistic regression fits alone imply 4,141,908 coefficients and intercepts under the recorded dimensions. We distinguish source observations, recorded outputs, direct data checks, arithmetic reconstruction, and prospective proposals. \par\medskip\noindent\textbf{Contribution of the Paper:} The study provides an inspectable case of alignment among inference, evaluation, and accounting, with a corrected protocol for evaluation and resource reporting; it introduces no new classification algorithm or demonstrated deployment advantage.
+We audit a stacked TF-IDF ensemble for harmful-content classification and trace how evaluation and parameter accounting relate to the predictor actually used. The recorded three-fold run contains 47,817 labeled training rows, 11,955 test rows, 230,105 TF-IDF features, six base candidates, and a logistic regression stacker. The selected weighted ensemble records pooled out-of-fold macro-F1 0.5314, compared with 0.5221 for the strongest base candidate. We distinguish label-free representation fitting, aggregate class statistics, supervised meta-feature dependencies, stopping, and selection. Regenerated seed-42 folds place 308 exact-text groups across folds; 52 repeated-text groups contain conflicting labels. Reconstructed ensemble weights range approximately from 0.111846 to 0.158125. Their observed advantage over uniform averaging is 0.0008, not a bound on selection bias. The separately profiled identity module is absent from the prediction path. Six base logistic regression fits imply 4,141,908 coefficients and intercepts, while the exported value 0.183 is derived from a target ratio. Source observations, retained outputs, data checks, and arithmetic are labeled separately. A paired LR comparison yields macro-F1 0.522061 with global TF-IDF and 0.518872 with fold-fitted TF-IDF, holding class weights fixed. The audit supplies controlled rerun protocols. It introduces no new classifier or measured deployment advantage.
 \end{abstract}
+
 \begin{keyword}
 Harmful-content classification \sep Evaluation validity \sep Stacked
 generalization \sep Accounting boundaries \sep Reproducibility.
@@ -61,33 +74,17 @@ A harmful content classifier's reported accuracy and efficiency are interpretabl
 
 We distinguish three objects: the \emph{inference object}, which maps raw text to predictions; the \emph{evaluation object}, which includes fitting, validation, and selection; and the \emph{accounting object}, which defines the artifacts and computation included in a resource claim. Stacking~\cite{wolpert1992stacked} makes their relationship consequential: excluding a row from its own base fit does not necessarily isolate the full procedure when meta training features depend on meta validation labels. Global preprocessing and repeated selection create additional dependencies~\cite{varma2006bias,cawley2010overfitting,kapoor2023leakage}.
 
-We examine one recorded LightBanglaHC implementation from the HerWILL AI for Digital Safety Datathon 2026. The updated notebook, retained outputs, competition description, and raw CSVs permit source inspection, data checks, inference reconstruction, and arithmetic accounting. Row level OOF predictions and fitted artifacts remain unavailable, so we neither rerun training nor authenticate recorded predictions by replay. Documentation describes a mixed Bangla, English, and Banglish corpus; preprocessing alone would not establish this scope.
+We examine one recorded implementation from \CompetitionName. \ifNamedCase The supplied competition description is cited as an operational source~\cite{herwill2026materials}.\fi The updated notebook, retained outputs, competition description, and raw CSVs permit source inspection, data checks, inference reconstruction, and arithmetic accounting. Historical row-level OOF predictions and fitted artifacts remain unavailable. We execute new data checks and a controlled LR comparison; these are distinct from replaying the original predictions. Documentation describes a mixed Bangla, English, and Banglish corpus; preprocessing alone would not establish this scope.
 
 The contribution is an inspectable audit linking the three objects within one artifact, followed by a corrected prospective protocol. It is not a new algorithm, a demonstration of predictive superiority, or a measured deployment advantage. Section~\ref{sec:design} defines the evidence categories and verification limits used throughout.
 
 \section{Related Work}
 \label{sec:related}
+Hate speech, offensive language and implicit harm require documented annotation decisions~\cite{davidson2017automated}. Functional tests probe negation and counter speech~\cite{rottger2021hatecheck}; harm and bias analysis requires stating whose interests are considered~\cite{blodgett2020language}. BD-SHS~\cite{romim2022bdshs} and BanglaBERT~\cite{bhattacharjee2022banglabert} provide Bangla context, not directly comparable scores or verified source datasets for this corpus. Data statements help document population and curation scope~\cite{bender2018datastatements}.
 
-\subsection{Harmful Content Constructs and Bangla Resources}
-\label{sec:rw-constructs}
-Hate speech and offensive language require distinct annotation decisions~\cite{davidson2017automated}; multi-aspect schemes also document dimensions such as hostility and targets~\cite{ousidhoum2019multilingual}. Functional tests expose weaknesses that aggregate scores can obscure, including responses to negation and counter speech~\cite{rottger2021hatecheck}. Bias analysis further requires stating which harms matter and to whom~\cite{blodgett2020language}. Without an annotation manual, LightBanglaHC's "subtle" class cannot be interpreted as a validated category of sarcasm or implicitness.
+Stacked generalization learns from base predictions~\cite{wolpert1992stacked}. Super Learner studies cross-validated combination and risk minimization~\cite{vanderlaan2007super}; the source's squared-F1 heuristic is different. Hastie et al., Section 7.10.2~\cite{hastie2009elements}, explain why model assessment must include preparation and selection within permitted training data. Their supervised-selection example is not a numerical estimate of label-free TF-IDF bias here. Selection bias~\cite{varma2006bias,cawley2010overfitting} and leakage~\cite{kapoor2023leakage} motivate tracing full feature ancestry. Calibration adds fitted state~\cite{niculescumizil2005probabilities} and requires separate reliability diagnostics~\cite{vaicenavicius2019calibration}. Overlapping folds complicate uncertainty~\cite{bengio2004variance}; paired tests require retained predictions and an appropriate design~\cite{dror2018significance}.
 
-\label{sec:rw-bangla}
-BD-SHS provides a Bangla hate speech resource with hierarchical annotation~\cite{romim2022bdshs}, while BanglaBERT provides pretrained language representations and Bangla understanding benchmarks~\cite{bhattacharjee2022banglabert}. These works supply context rather than directly comparable scores: no verified link connects their data or label definitions to the HerWILL corpus. Data statements document curation and population scope~\cite{bender2018datastatements}, information only partly available for this audit.
-
-\subsection{Stacking, Calibration, and Evaluation}
-\label{sec:rw-stacking}
-Stacked generalization trains a combiner from base predictions~\cite{wolpert1992stacked}. Complement Naive Bayes is a distinct estimator designed to address assumptions of conventional Naive Bayes text classification~\cite{rennie2003tackling}. Calibration adds fitted state to the probability-generation path~\cite{niculescumizil2005probabilities}; library versions therefore matter when reconstructing both predictions and retained estimators~\cite{pedregosa2011scikit}.
-
-\label{sec:rw-eval}
-Model selection can bias an estimate when the same information supports tuning and assessment~\cite{varma2006bias,cawley2010overfitting}. Leakage includes dependencies introduced outside the final estimator fit~\cite{kapoor2023leakage}. Overlapping cross-validation folds require care in uncertainty estimation~\cite{bengio2004variance}, and paired comparisons require predictions and a test appropriate to the experimental design~\cite{dror2018significance}. Probability calibration also requires evaluation separate from classification accuracy~\cite{vaicenavicius2019calibration}. These principles motivate tracing the complete ancestry of meta features rather than accepting an OOF label as proof of isolation.
-
-\subsection{Resource Reporting and Contribution}
-\label{sec:rw-accounting}
-Green AI motivates reporting computational cost together with predictive performance~\cite{schwartz2020greenai}. Energy reporting~\cite{henderson2020systematic}, reproducibility programs~\cite{pineau2021reproducibility}, and model cards~\cite{mitchell2019modelcards} distinguish resource measurements, replay evidence, and intended use.
-
-\label{sec:rw-summary}
-The present study applies established evaluation and reporting principles to one recorded harmful content pipeline. Its specific contribution is the joint reconstruction of prediction dependencies, selection exposure, and the boundary behind zero and fractional parameter claims. We do not claim that leakage or incomplete accounting is a newly discovered general problem, or that this selective review establishes an absence of prior audits.
+Green AI~\cite{schwartz2020greenai}, energy reporting~\cite{henderson2020systematic}, reproducibility~\cite{pineau2021reproducibility}, and model cards~\cite{mitchell2019modelcards} distinguish computation, replay and intended use. This study applies those established principles to one prediction and accounting record.
 
 \section{Study Design, Evidence, and Dataset Scope}
 \label{sec:design}
@@ -95,14 +92,14 @@ The present study applies established evaluation and reporting principles to one
 \subsection{Design and Audit Method}
 The unit of analysis is the relationship among the implementation, retained outputs, and supported claims. We trace invoked fitting, prediction, selection, profiling, and saving operations through their inputs; comments do not establish execution. We inspect the supplied updated notebook and check raw CSV shapes, labels, identifiers, and exact text duplication. We also reconstruct metrics from its embedded confusion figure. These checks substantiate source structure and internal consistency, not authenticated historical execution.
 
-Each claim has an evidence type: S (source observation), R (recorded output), D (direct CSV check), A (arithmetic reconstruction), X (unverified external quantity), or P (prospective proposal). An unperformed experiment is stated as such. No training, calibration, threshold search, or fresh prediction replay was performed by this audit. Source locations and full file digests are provided in the accompanying artifact ledger rather than abbreviated identities that cannot uniquely match a file.
+Each claim has an evidence type: S (source observation), R (retained historical output or explicitly identified new execution), D (direct CSV check), A (arithmetic reconstruction), X (unverified external quantity), or P (prospective proposal). An unperformed experiment is stated as such. New checks regenerate fold indices and inspect duplicates, export structure, and weight arithmetic. The LR comparison uses a new software environment; the six-candidate historical pipeline and nested stack are not replayed. Source locations, full file digests, regenerated folds, and execution status are supplied in the artifact ledger and supplement. The availability statement identifies the review copy.
 
 \subsection{Available Artifacts and Version Boundaries}
-The updated notebook contains one code cell, 971 source lines, execution count one, two output streams, and one embedded figure. Its metadata dates execution to 20 April 2026, with a recorded duration of 9,142.89 seconds. This metadata is a retained record, not an independently authenticated timestamp. The notebook's output says \texttt{Device: cuda}, whereas its Kaggle metadata sets GPU enablement false. Python metadata lists 3.12.12; package versions and actual device identity are not logged.
+The canonical notebook has one code cell, 971 source lines, execution count one, two output streams, and one figure (S). Metadata records execution on 20 April 2026 for 9,142.89 seconds (R). Python metadata lists 3.12.12; historical package versions are absent. Output reports \texttt{Device: cuda}, while notebook metadata disables GPU. These retained fields are not independently authenticated execution records.
 
-This notebook is distinct from earlier materials. A prior manuscript reports a five-fold, 39-parameter TinyLinear path and macro-F1 0.5295. Another supplied notebook reports four classes, 54,817 training rows, 14,955 test rows, a 68-parameter head, and SVC selection. Neither supplies the execution record analyzed here. The updated source instead selects a weighted ensemble over six base candidates and one stacker. Its figures and numbers replace earlier-run claims in this paper; the historical files are preserved separately for provenance.
+The author now reports runtime 2 h 32 min 37 s on GPU T4 $\times2$, public score 3.78469, and private score 3.78930 (X). These were supplied in correspondence, without a linked scoring receipt or execution record. The reported duration is 9,157 seconds, approximately 14.11 seconds longer than notebook metadata (A). GPU allocation does not show that the classical estimators used GPU acceleration; the source sets no GPU device for LightGBM. The platform scores are neither macro-F1 measurements nor evidence resolving the missing scorer.
 
-The 2026 dataset ZIP contains the three-class CSVs. Separately supplied loose CSVs contain the larger four-class version, with 5,630 repeated training identifiers and 620 repeated test identifiers beyond their first occurrence (D). The smaller files are exact trailing tabular subsets of the larger ones. This relationship does not make the larger version interchangeable with the competition's three-class task. We use only the three-class archive for direct dataset checks.
+We use only the three-class 2026 archive. Historical variants are separated in Supplement S1. They do not support claims about this selected path.
 
 \subsection{Task and Checked Corpus}
 The supplied competition description maps 0 to Explicitly Toxic/Hateful, 1 to Subtly Toxic, and 2 to Non-toxic/Neutral. Training columns are \texttt{id}, \texttt{text}, and \texttt{y}; test columns are \texttt{id} and \texttt{text}. Shapes are (47,817, 3) and (11,955, 2) before processed columns are added (D), totaling 59,772 rows. Table~\ref{tab:supports} reports the class supports, which also match the updated notebook's printed counts.
@@ -126,14 +123,12 @@ Total & 47,817 & 100.000 & \\
 
 The source uses $w_c=n/(3n_c)$ for LR, SVC, SGD, Meta-LR, and LightGBM sample weights. CNB has no explicit class weight argument. Since weights depend on every training label, they also depend on each fold subsequently used for assessment. The test rows have no labels and support no accuracy measurement.
 
-Exact raw string checks find 621 repeated training rows and 54 repeated test rows beyond first occurrences, and 254 distinct texts shared between train and test (D). Identifiers are unique within each three-class file and disjoint between its train and test sets. Text overlap and identifier uniqueness are different properties. We neither estimate the effect of duplication nor perform a near-duplicate, shared-author, or thread analysis.
+Exact raw-string checks find 621 repeated training rows and 54 repeated test rows beyond first occurrences, and 254 distinct texts shared between train and test (D). New regenerated-fold counts are reported in Section~\ref{sec:newchecks}. Identifiers are unique within each three-class file and disjoint between its train and test sets. Text overlap and identifier uniqueness are different properties. We neither estimate the effect of duplication nor perform a near-duplicate, shared-author, or thread analysis.
 
 \subsection{Documentation and Population Scope}
-The supplied description presents the corpus as manually annotated Bangla, English, and Banglish social media text from publicly accessible sources, including comments, captions, headlines, and status updates. It emphasizes sarcasm, coded language, code mixing, and noisy text. These are documentation claims, not measured language proportions or verified annotation agreement. The accompanying details document lists CC BY-NC-ND 4.0. It does not supply a complete annotation manual, collection dates, consent records, or annotator-welfare documentation.
+The supplied description calls the corpus manually annotated Bangla, English and Banglish social-media content, emphasizing subtle toxicity, code mixing and noise. Language proportions and annotation agreement are not measured. Its details document lists CC BY-NC-ND 4.0, but supplies no full annotation manual, consent records or annotator-welfare documentation. Label names and script cues do not validate sarcasm detection or language identification. We describe the supplied documentation, not whether the original release had additional records.
 
-The intended label meanings are therefore available, but construct validation remains incomplete. A class called Subtly Toxic does not by itself validate sarcasm detection, and a script indicator is not a language-identification evaluation. The audit makes no claim that the original release lacked documentation; it describes what was supplied for inspection.
-
-\section{Updated LightBanglaHC Pipeline}
+\section{Audited Prediction Pipeline}
 \label{sec:pipeline}
 
 \subsection{Cleaning, Signals, and Numerical Features}
@@ -143,7 +138,7 @@ s(x)=C(x)\,\|\,\texttt{SSEP}\,\|\,H(x),
 \end{equation}
 where $C$ cleans text and $H$ produces signal tokens from the original input. The cleaner applies NFKC normalization, lowercasing, URL and mention substitutions, hashtag-marker removal, emoji substitution, repeated-letter reduction, repeated-punctuation markers, and whitespace compression (S). Signals retain access to original capitalization and punctuation rather than only the cleaned string.
 
-The explicit lexical union contains 21 Bangla, 23 transliterated, and 29 English entries, totaling 73 distinct strings; the subtle inventory contains 25 entries (S). Lexical detection tests substring presence, counting each distinct entry at most once per text, rather than counting every occurrence. Signals include capped repetition of explicit, subtle, sarcasm, threat, identity-related, script, capitalization, punctuation, length, and neutral markers. The string ``this is a salad'' activates the substring \texttt{sala}; this match records a lexical condition rather than intent.
+The explicit lexical union contains 21 Bangla, 23 transliterated, and 29 English entries, totaling 73 distinct strings; the subtle inventory contains 25 entries (S). Lexical detection tests substring presence, counting each distinct entry at most once per text, rather than counting every occurrence. Signals include capped repetition of explicit, subtle, sarcasm, threat, identity-related, script, capitalization, punctuation, length, and neutral markers. The string ``this is a salad'' activates \texttt{sala}, a transliterated term used abusively in Bangla and Hindi; it also has benign and kinship uses. Here it is a substring inside ``salad'', not an abusive utterance. The match records a lexical condition rather than intent.
 
 Twenty numerical features are generated without fitted scaling. They cover length, word count, lexical diversity, punctuation, emoji runs, Bangla regex runs, script indicators, capitalization, lexical hits, pattern flags, a combined cue count, and short/long indicators. One feature divides the number of Bangla regex runs by character length; it is not a measured fraction of Bangla characters. Numerical features are supplied to LightGBM only. A marker named for hate or neutrality is a code identifier, not a validated social construct.
 
@@ -218,12 +213,12 @@ Three Meta-LR fits are trained from the single global OOF feature matrix using t
 \hat y(x)=\arg\max_c\sum_{j=1}^{7}\alpha_j p_j(x)_c.
 \label{eq:ensemble}
 \end{equation}
-The weights are learned from labeled evaluation outcomes. ``Weighted'' therefore does not mean a prespecified, label-independent average. Figure~\ref{fig:pipeline} separates this prediction path from the independent profiling operation.
+These weights use labeled development outcomes rather than a prespecified average. Figure~\ref{fig:pipeline} separates this prediction path from the independent profiling operation.
 
 \begin{figure*}[t]
 \centering
-\begin{tikzpicture}[node distance=7mm, every node/.style={font=\small},
-box/.style={draw,rounded corners,align=center,text width=10.4cm,minimum height=9mm},
+\begin{tikzpicture}[node distance=4mm, every node/.style={font=\small},
+box/.style={draw,rounded corners,align=center,text width=10.4cm,minimum height=7mm},
 arr/.style={-{Latex[length=2mm]},thick}]
 \node[box] (text) {Raw text: cleaning, signal tokens, and 20 numerical rules};
 \node[box,below=of text] (features) {Four fitted TF-IDF branches: 230,105 columns\\LightGBM additionally receives 20 numerical columns};
@@ -232,7 +227,7 @@ arr/.style={-{Latex[length=2mm]},thick}]
 \node[box,below=of meta] (final) {Weighted average of six base outputs and Meta-LR; three-class argmax\\Weights are derived from pooled OOF macro-F1};
 \draw[arr] (text)--(features);\draw[arr] (features)--(base);
 \draw[arr] (base)--(meta);\draw[arr] (meta)--(final);
-\node[draw,dashed,align=center,text width=10.4cm,below=9mm of final] {Separate profiling call: \texttt{ZeroParamNet} identity on a random 3-vector\\No call connects this module to the selected prediction path};
+\node[draw,dashed,align=center,text width=10.4cm,below=6mm of final] {Separate profiling call: \texttt{ZeroParamNet} identity on a random 3-vector\\No call connects this module to the selected prediction path};
 \end{tikzpicture}
 \caption{Source-derived computation (S), not a measured deployment benchmark. Base outputs also enter the final weighted average directly, as specified in Equation~\ref{eq:ensemble}.}
 \label{fig:pipeline}
@@ -268,7 +263,7 @@ Average + thresholds & Alternative & 0.5287 & -- & -- & -- \\
 \end{tabular}
 \end{table*}
 
-Pooling computes F1 once from one prediction per training row. It is not the mean of fold F1 values because F1 is nonlinear in confusion counts. Nor does the OOF value directly evaluate the final test procedure: an OOF row uses fold-specific base outputs and its held-out meta fit, whereas test prediction averages three fits at both levels. The global OOF-derived weights add another difference between exclusion from a base fit and assessment of a frozen procedure.
+Pooled F1 is computed once from all OOF rows, not averaged over fold F1. OOF prediction uses a single held-out fit, whereas test prediction averages three fits at both levels. Assessing the latter requires a matched frozen procedure.
 
 The threshold search evaluates $30\times30=900$ pairs for each of the two ensemble probability arrays, adjusting classes 0 and 1 while leaving class 2's divisor at one (S). Its search interval is 0.1 to 0.9, omitting the unadjusted pair $(1,1)$. A lower best threshold score than the unadjusted score is therefore possible without a contradiction. The final source compares four variants and selects the unadjusted weighted ensemble. The displayed weighted thresholds 0.90, 0.87, and 1.00 are not on that selected prediction path.
 
@@ -292,25 +287,43 @@ Predicted & 25,326 & 17,662 & 4,829 & 47,817 & \multicolumn{3}{c}{Macro-F1 0.531
 \end{tabular}
 \end{table*}
 
-Neutral has the lowest F1 and recall. Of 4,829 examples predicted Neutral, 2,583 have a toxic label; 3,652 actual Neutral examples are assigned a toxic label. The largest off-diagonal count is 7,502 Subtle examples predicted Explicit. These are descriptions of disagreements, not explanations of sarcasm, lexical bias, or annotation error. Row level OOF predictions and paired candidate outputs are absent, so joint errors cannot be recovered. An always-Explicit predictor has arithmetic macro-F1 $2n_0/[3(n+n_0)]=0.221275$ (A), not a measured baseline experiment.
+Neutral has the lowest F1 and recall. Of 4,829 examples predicted Neutral, 2,583 have a toxic label; 3,652 actual Neutral examples are assigned a toxic label. The largest off-diagonal count is 7,502 Subtle examples predicted Explicit. Without paired row-level outputs, causes and joint candidate errors remain unknown. An always-Explicit predictor has arithmetic macro-F1 $2n_0/[3(n+n_0)]=0.221275$ (A), not a measured baseline experiment.
 
-\subsection{Test Outputs and Version Mismatch}
-The updated notebook prints 6,414 Explicit, 4,401 Subtle, and 1,140 Neutral test predictions, totaling 11,955 (R). It prints \texttt{parameters}=0.183 for its main export. Those generated CSVs were not supplied. The separately supplied \texttt{submission.csv} instead has 5,501, 4,139, and 2,315 predictions and constant NOP 39 (D). Its IDs match the three-class test and sample submission in order, but it is not the output described by the updated notebook. We preserve it as an earlier-version artifact and do not relabel it as the updated submission.
+\subsection{Test Export and Platform Claims}
+The updated notebook prints 6,414 Explicit, 4,401 Subtle, and 1,140 Neutral test predictions (R). A newly supplied CSV contains exactly these class counts, 11,955 rows, columns \texttt{id,y\_pred,parameters}, IDs matching the three-class test file in order, and constant \texttt{parameters}=0.183 (D). This establishes aggregate and schema consistency with the recorded export. Without fitted states or row-level historical probabilities, it does not authenticate the origin of every prediction.
 
-The updated source writes several files with different declared NOP values. Because zero equals the initial profiled value, its duplicate-skipping condition skips every zero-valued loop entry; the retained output confirms files for 0.1, 0.3, and 1, followed by the main file at 0.183. A later summary instructs submission of a zero-valued filename despite no corresponding save in this path. We distinguish invoked saves from report text. No save message establishes platform acceptance, compliance, or leaderboard rank.
+The source writes additional files with declared NOP values 0.1, 0.3, and 1. Number of parameters (NOP) means a count under a stated model boundary, not a freely chosen denominator. A zero-valued loop entry is skipped because it equals the initial profiled value; a later summary recommends that filename despite no matching save. We distinguish these source operations from platform acceptance. The new author-reported public/private scores remain X evidence.
 
 \subsection{Timing and Retained State}
 The recorded LR training sections take 2,601.7 and 2,625.0 seconds, and LightGBM takes 3,802.8 seconds (R). These three sections alone total 9,029.5 seconds, about 150.5 minutes (A), before other work. The notebook metadata reports about 152.4 minutes. Thus its concluding ``25--35 minutes'' claim is inconsistent with its retained timings. Those timings are historical output, not a newly controlled runtime benchmark, and no inference latency measurement is supplied.
 
-LightGBM reports best iterations 149, 173, and 182 (R). No fitted vectorizers, base models, boosters, meta estimators, or OOF probability arrays are serialized by the inspected source. In-memory test arrays are generated before export, but the absence of saved model files prevents fresh-process raw-text replay. Historical environment uncertainty remains even though the source and recorded dimensions can now be inspected.
+LightGBM reports best iterations 149, 173, and 182 (R). The inspected source serializes no fitted vectorizers, base models, boosters, meta estimators, or historical OOF arrays. In-memory test arrays are generated before export, but the absence of saved model files prevents fresh-process raw-text replay. Historical environment uncertainty remains even though the source and recorded dimensions can now be inspected.
 
 \section{Evaluation Validity}
 \label{sec:validity}
 
-\subsection{Global Representation and Label Statistics}
-The recorded macro-F1 describes the notebook's retained development predictions. It does not show how a fully specified fitting and selection procedure performs on untouched examples. All four TF-IDF fits precede fold construction, so validation covariates affect vocabulary membership, frequency filtering, cap-based selection, and IDF. Hyperparameters can be fixed while the fitted representation still depends on evaluation text~\cite{kapoor2023leakage}.
+\subsection{Different Types of Evaluation Exposure}
+The retained score describes development predictions. Table~\ref{tab:taxonomy} separates mechanisms by the information they use and their structural reach. The tiers prioritize validation work; they are not measured effect sizes or a universal ordering of harm.
 
-Global class weights expose label statistics separately: $w_{I,c}=|I|/(3n_{I,c})$ includes every validation label in the class count used to fit a fold. LightGBM's fitting sample weights inherit the same dependency. The test text is transformed only, so this is an intra-training evaluation exposure, not evidence that the source fits vocabulary on unlabeled test text. Exact train/test text overlap is another dataset property, with a separate provenance from these code-level dependencies.
+\begin{table*}[t]
+\small\centering
+\caption{Structural exposure taxonomy (S/A/P). Magnitude is unmeasured unless an observed diagnostic is stated; an observed score gap is not a bias bound.}
+\label{tab:taxonomy}
+\begin{tabularx}{\textwidth}{P{2.8cm}P{4.1cm}X}
+\toprule
+Mechanism / tier & Information and reach & Interpretation and required control \\
+\midrule
+TF-IDF / covariate exposure & Label-free validation text enters vocabulary, frequency filters, caps and IDF. & Transductive representation exposure. Fit each branch on the permitted training subset; compare with the global arm. No label-path claim. \\
+Class weights / aggregate exposure & Three class counts include validation labels; fitting sample weights inherit them. & Low-dimensional label statistics. Here stratification makes fold-local values differ by at most 0.005506\% relatively (A); measure any prediction effect separately. \\
+Early stopping / supervised selection & LightGBM assessment labels select boosting rounds through log loss. & Reuse of assessment outcomes. Use a stopping partition inside the training subset, then assess the frozen fit. \\
+Meta-stacking / supervised feature ancestry & Meta-training features are generated by base fits containing meta-assessment labels. & Full supervised dependency path. Rebuild inner OOF features within every outer training subset. \\
+Ensemble weights / aggregate selection & Seven pooled F1 scores determine normalized squared weights. & Near-uniform weights; observed gain 0.0008. Estimate optimism only with protected assessment labels. \\
+Threshold and candidate choice / repeated selection & Two grids of 900 choices and four final variants use the same labeled OOF rows. & Multiple adaptive comparisons. Freeze decisions within training-only selection partitions. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+The TF-IDF fits precede fold construction, but test text is only transformed. Thus this is intra-training covariate exposure, not fitting on the unlabeled test set. Global class weights use $w_{I,c}=|I|/(3n_{I,c})$. Regenerated fold-local weights differ from these global values by at most 0.005506\% relatively (A), reflecting the close stratified class counts. This small statistic difference should not be presented as equivalent in scope to the meta learner's full supervised ancestry. It does not by itself prove a negligible prediction effect.
 
 \subsection{Nonnested Meta-Training Dependencies}
 For a meta learner $q^{(-a)}$ trained on $\{(z_i,y_i):i\notin V_a\}$ and evaluated on $V_a$, take a meta-training row $i\in V_b$, $b\ne a$. Its features came from base fits on $I\setminus V_b$, a set containing $V_a$. Thus
@@ -323,17 +336,50 @@ y_{V_a}&\longrightarrow h_m^{(-b)}\longrightarrow z_i\\
 \end{equation}
 A row in $V_a$ does receive base features from an estimator fit excluding $V_a$. However, the meta model evaluating that row was trained on other features whose construction used $y_{V_a}$. Row-level OOF exclusion therefore does not isolate the complete stacker. This structural dependency remains even if global preprocessing and class weights are provisionally accepted.
 
-Rebuilding base OOF features only once for all meta folds preserves this path. It must instead be regenerated within the training partition of each outer assessment split, and again within the allowed fitting subset of each selection split. Equation~\ref{eq:path} establishes missing isolation, not the magnitude or direction of score distortion. Quantifying that would require a corrected rerun with protected assessment labels; none was performed here.
+Rebuilding base OOF features only once for all meta folds preserves this path. It must instead be regenerated within the training partition of each outer assessment split, and again within the allowed fitting subset of each selection split. Equation~\ref{eq:path} establishes missing isolation, not the magnitude or direction of score distortion. The nested comparison in the supplement is prospective; its result remains an explicit author task.
 
-\subsection{Stopping, Weighting, and Candidate Selection}
-LightGBM uses its validation labels for early stopping and subsequently reports macro-F1 on those same rows. The stopping objective is multiclass log loss; using a different reporting objective does not create a new evaluation sample. The ensemble weights are functions of pooled OOF F1 values, which are functions of all training labels. An OOF row's label can therefore influence its final weighted predictor through the aggregation weights even apart from meta-feature construction.
+\subsection{Stopping, Near-Uniform Weights, and Selection}
+LightGBM uses its assessment labels for stopping and later reports macro-F1 on the same rows. Reporting a different objective does not create a new assessment sample. Ensemble weights are functions of the pooled OOF F1 values, so each evaluation label can also affect the aggregation rule.
 
-The two threshold searches each assess 900 choices on the entire pooled labeled OOF set. Their selected results and the unadjusted alternatives are then compared on those same labels. The final weighted result is selected from this development comparison. These repeated uses create opportunities for selection optimism~\cite{varma2006bias,cawley2010overfitting}; the audit measures no bias magnitude and does not attribute the rounded 0.0093 difference to any one component.
+Using the seven printed four-decimal candidate scores in Equation~\ref{eq:ensemble} gives approximate weights 0.154991, 0.158125, 0.134992, 0.111846, 0.127651, 0.154452, and 0.157943 for LR\_C8, LR\_C3, SVC, CNB, SGD, LightGBM, and Meta-LR respectively (A). Uniform weight is $1/7=0.142857$; the largest absolute departure is about 0.031011. The source used unrounded scores, so these are reconstructed approximations, not recovered fitted weights.
+
+The recorded weighted score 0.5314 exceeds the simple average 0.5306 by 0.0008, or 0.08 percentage points (A). This is a small observed development-set gain. It is \emph{not} an upper bound on leakage or selection optimism: both probability arrays share other evaluation dependencies, and no untouched paired comparison is available. We therefore give this mechanism narrower emphasis than meta-feature ancestry.
+
+Each threshold grid assesses 900 choices on the same OOF labels. Their selected results and unadjusted alternatives are then compared to choose one of four final variants. These are selection opportunities~\cite{varma2006bias,cawley2010overfitting}; no measured bias is assigned to them or to the rounded 0.0093 ensemble-versus-base difference.
 
 \subsection{Dependence and Uncertainty}
-The three fitting subsets overlap: each pair shares roughly one-third of the full corpus, or half of either fitting subset. They are not independent repetitions. Stratification addresses class balance but does not protect against duplicates, shared authors, threads, or temporal dependence. Exact repetitions have been identified in the raw CSVs, but their allocation across the historical folds cannot be inspected from a saved fold-index file because none is provided.
+The three fitting subsets overlap: each pair shares roughly one-third of the full corpus, or half of either fitting subset. They are not independent repetitions. Stratification addresses class balance but does not protect against duplicates, shared authors, threads, or temporal dependence. Seed-42 fold indices are now regenerated from the supplied CSV using scikit-learn 1.8.0. They are saved with IDs and labels. They are a new reconstruction, not an authenticated historical fold file; their duplicate counts appear below.
 
 There is no universally unbiased K-fold variance estimator based only on observed fold errors~\cite{bengio2004variance}. Paired comparisons also require retained row level predictions and a procedure appropriate to the data's independent units~\cite{dror2018significance}. We report neither a naive fold-based interval nor a significance claim. Such an interval would not resolve the fitting and selection exposures already traced.
+
+\subsection{New Checks and Controlled Comparisons}
+\label{sec:newchecks}
+We regenerate \texttt{StratifiedKFold(3, shuffle=True, random\_state=42)} without changing row order. A repeated-text group means two or more rows with exactly the same raw string. Of 461 such training groups containing 1,082 rows, 308 groups containing 771 rows span multiple regenerated folds (D). Conflicting labels occur in 52 repeated-text groups containing 130 rows; 36 of those groups span folds. These counts reveal split and annotation dependence, not its effect on macro-F1. No normalization or near-duplicate criterion is used.
+
+\begin{table*}[t]
+\small\centering
+\caption{New evidence and pending comparisons. D/A results are checks or calculations; new LR scores are explicitly distinguished from historical R. No missing result is inferred from the 0.5314 record.}
+\label{tab:newchecks}
+\begin{tabularx}{\textwidth}{P{5cm}P{4cm}X}
+\toprule
+Check / comparison & Result & Evidence and interpretation \\
+\midrule
+LR\_C3, global TF-IDF & New pooled F1 0.522061 & New R; same full CSV and folds as the paired arm. \\
+LR\_C3, training-fold TF-IDF & New pooled F1 0.518872 & New R; fixed global class weights and source solver/settings. \\
+Global minus fold-fitted LR & 0.003189 macro-F1 & A; difference in this paired run, not a general bias bound. \\
+Non-nested / nested Meta-LR & Historical 0.5218 / \AuthorTodo{run nested stack} & R/P; compare newly executed matched arms, not one historical score against one new environment. \\
+Exact-text groups spanning folds & 308 groups; 771 rows & D; regenerated seed-42 indices. \\
+Repeated-text groups with label conflict & 52 groups; 130 rows & D; 36 groups also span folds. \\
+Squared-F1 weight range & Approx. 0.111846--0.158125 & A; computed from rounded scores. \\
+Weighted minus uniform ensemble & 0.0008 macro-F1 & A/R; observed development difference, not a bias bound. \\
+Updated CSV consistency & 11,955 rows; NOP field 0.183 & D; IDs/order and class counts match the recorded export. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+The LR script fits all four branches globally in one arm and only on each training fold in the other. Both retain the original global class weights to isolate TF-IDF scope. They use $C=3$, SAGA, multinomial loss, tolerance $10^{-3}$, maximum 2,000 iterations, and seed 42. Software versions, warnings, iterations, probabilities and fold IDs are saved. All six LR fits reach the 2,000-iteration cap and emit convergence warnings (new R). Thus the result describes the source training budget, not converged optima. The global score rounds to the historical 0.5221, but does not authenticate that unknown environment. A fully corrected arm should additionally recompute class weights within each training subset.
+
+The complete notebook is not claimed impossible to rerun. Its historical outputs cannot be replayed from saved fitted objects because those objects and versions were not retained. This audit environment has an 8 GiB memory limit, CPU execution and scikit-learn 1.8.0. LightGBM 4.7.0 was made available for a new run; PyTorch profiling is separate from the classical predictor. The full-data paired LR comparison is completed here. The 54 nested base-candidate objects, stopping refits and matched non-nested arm exceed this revision's training budget; the supplemental protocol leaves its result as \AuthorTodo{execute both stacking arms and insert paired macro-F1 results}. A new training run is replication evidence, not recovery of the original fitted states.
 
 \section{Parameter Boundaries and Score Provenance}
 \label{sec:accounting}
@@ -344,7 +390,7 @@ The source defines \texttt{ZeroParamNet.forward(x)} to return $x$ unchanged. It 
 The retained output prints \texttt{Manual NOP: 0} and \texttt{Final thop NOP: 0}, without the success line printed by the successful profiling branch. The variable is initialized to zero and remains zero when THOP is unavailable or fails. Consequently, the final printed zero alone cannot establish successful profiling. The source uses one positional input to this separate module, whereas the supplied competition description illustrates a two-input model call with token IDs and an attention mask. These interfaces do not determine a whole-system accounting boundary.
 
 \subsection{Structural Inventory of the Selected Predictor}
-The selected path contains six base candidates, each averaged over three fold-specific fits, plus three Meta-LR fits and seven combination weights. It also needs the cleaner, signals, four fitted vocabularies/IDF arrays, and LightGBM numerical rules. Unlike the earlier TinyLinear path, there is no learned PyTorch head in the updated predictor. Counting such a historical head would describe another version.
+The selected path needs six three-fold base candidates, three Meta-LR fits, seven weights, four fitted vocabularies/IDF arrays and fixed text/numerical rules. No learned PyTorch head is invoked.
 
 At recorded TF-IDF width $D=230{,}105$, each three-class multinomial LR fit has $3D$ coefficients and three intercepts. The two LR candidates each require three fits for their stored test averages. Meta-LR has 18 input probabilities and three output scores:
 \begin{equation}
@@ -357,37 +403,36 @@ N_{\mathrm{three\ Meta\ LR}}&=3(3\times18+3)=171.
 \end{equation}
 These are arithmetic scalar inventories for specified matrices (A), not measured memory occupancy or a complete contest NOP. Coefficients for SVC and SGD, CNB state, calibrators, LightGBM trees, vocabularies, and IDF arrays remain outside this subtotal. Internal calibration can retain multiple fitted classifiers/functions per outer object; historical defaults and fitted internals are unknown~\cite{pedregosa2011scikit}.
 
-No complete serialized artifact, peak RAM measurement, raw-text inference latency, or energy benchmark is available. Parameter counts, fitted state, serialized bytes, RAM, latency, and energy are distinct quantities~\cite{henderson2020systematic}. Averaging stored probability arrays is not a deployable substitute for the models needed to generate probabilities for unseen text. A resource comparison must apply the same declared boundary to every candidate.
+No complete serialized artifact, peak RAM measurement, raw-text inference latency, or energy benchmark is available. Scalar counts, fitted state, bytes, RAM, latency and energy are distinct~\cite{henderson2020systematic}. Comparisons need the same boundary and models that generate probabilities for unseen text.
 
 \subsection{Fractional Export Values Are Not Measurements}
-The main exported value rounds $F/2.9$ to three decimal places (S), producing 0.183 (R). It depends on a target score rather than on any model structure. A number of scalar parameters is a cardinality; 0.183, 0.1, and 0.3 are not measured counts. Zero is a valid count for the separate identity module, but it does not establish that a fitted ensemble has no state. No efficiency or compliance conclusion is supported by these exports.
+\ifNamedCase
+For the named \CompetitionName\ record, the source sets the main export field by rounding $F/2.9$ to three decimal places (S), producing 0.183 (R/D).
+\else
+For the public-datathon record, the source sets the main export field by rounding $F/2.9$ to three decimal places (S), producing 0.183 (R/D).
+\fi
+This is a target-derived denominator, not a structural parameter measurement. The assigned values 0.183, 0.1, and 0.3 are fractional, whereas a count of scalar parameters is an integer. The separate identity operation has zero trainable parameters; the selected fitted ensemble has additional state. These observations describe implementation and measurement provenance, not a verified organizer ruling or a claim about author intent.
 
-With reconstructed $F=0.5314177984731835$ and $\epsilon=5\times10^{-16}$, the local ratio $F/(N+\epsilon)$ yields approximately $1.0628\times10^{15}$ at $N=0$ and 2.9039 at $N=0.183$ (A). These are arithmetic consequences of assigned denominators, not achieved leaderboard outcomes. The construction chooses a denominator near the desired ratio by design; it does not discover an efficient model.
+With $F=0.5314177984731835$ and $\epsilon=5\times10^{-16}$, the local ratio $F/(N+\epsilon)$ gives about $1.0628\times10^{15}$ at $N=0$ and 2.9039 at $N=0.183$ (A). These are arithmetic projections, not the new author-reported public/private platform scores. Changing the case name does not change the technical facts or remove the need to document the applicable accounting rules.
 
 \subsection{Authoritative Scoring Remains Unresolved}
-The supplied details document presents $0.4F+0.6/[\log(N+1)+\epsilon]$ in its evaluation section, without specifying the log base, but later quotes $F/(N+\epsilon)$ in related-work notes. The original formula image and official scoring implementation are absent, and the pasted competition text omits the equation itself. The notebook implements the ratio for score projections; this is source evidence of a local formula, not verification of the competition contract.
+The supplied details document gives $0.4F+0.6/[\log(N+1)+\epsilon]$ without a log base, but later quotes $F/(N+\epsilon)$. The original formula image, official scoring code, and classical-model count boundary remain unavailable. The notebook's local ratio is source evidence, not verification of the contest contract. Public and private platform values 3.78469 and 3.78930 are author reports (X); hidden-set macro-F1, uploaded-file identity, and acceptance are not inferred from them. Earlier scores from other versions are confined to Supplement S1.
 
-The recorded figure combines earlier public values 0.24877, 0.25711, and 0.37286 with current OOF F1 0.5314 on an axis called ``Score / F1.'' These quantities have different provenance and do not form a verified generalization trajectory. An earlier private value 0.37500 is also unverified (X). Neither numerical proximity to a weighted formula nor a projected ratio authenticates leaderboard semantics. A definitive compliance statement requires the original parameter-count boundary and scorer; this audit alleges no organizer decision or verified competition violation.
+\AuthorTodo{provide the scorer and count rule, plus a receipt linked to the submitted file hash}. Both naming versions retain these limitations. The anonymized version describes the case as a public datathon; it does not conceal a changed accounting calculation.
 
 \section{Corrected Prospective Protocol}
 \label{sec:discussion}
-The recorded ordering describes a development record, not a successful controlled ensemble experiment. The corrective protocol below is prospective (P); no listed training or benchmarking study was run by this audit. The artifact checks already performed should not be confused with these experiments.
+Freeze data bytes, label meanings, sampling units and permitted uses before assessment. Inspect duplicate/conflict groups; grouping protects repeated text while label conflicts require documented treatment. Keep the regenerated row-stratified comparison separate from a future group-aware evaluation.
 
-First, freeze the dataset bytes, official label mapping, independent sampling units, and authorized use conditions. Inspect exact and near duplicates before splitting, and group or separate dependent posts where the intended evaluation requires it. Document prior exposure to the data. Hash inputs, record fold indices, and preserve the intended test IDs without importing the larger four-class data by filename alone.
+For each outer training subset $T_a$ and assessment subset $E_a$, build new inner three-fold base OOF features using only $T_a$. Fit the four TF-IDF branches and class weights within permitted fitting subsets. Calibration remains inside each base fitting subset. LightGBM stopping uses a further training-only partition, never $E_a$. Fit Meta-LR on the new inner OOF features, and generate $E_a$ base features by averaging the same inner fits. This evaluates a specified fold-averaged base predictor. It does not silently equate it with a different final deployment ensemble.
 
-Second, choose an outer assessment partition $E_a$ and training partition $T_a=I\setminus E_a$. Every data-dependent operation producing predictions on $E_a$ must use only $T_a$: vocabularies, IDF, class weights, base fitting, calibration, LightGBM stopping, meta fitting, ensemble weighting, threshold choice, and candidate selection. Base OOF features must be rebuilt within each permitted inner fitting subset rather than borrowed from a global OOF matrix. Stopping and selection need partitions within $T_a$; outer labels remain inaccessible until the complete predictor is frozen.
+Run the original non-nested arm in the same new environment and save its paired probabilities. The fully corrected nested arm changes preprocessing, class statistics, stopping and feature ancestry jointly; its score difference is a protocol comparison, not a causal estimate of stacking alone. A separate nesting-only sensitivity study must hold the other operations fixed. Reserve ensemble weights, threshold search and candidate choice for training-only selection if evaluating the full selected ensemble. The requested Meta-LR comparison does not automatically validate that full ensemble.
 
-Third, compare standalone LR, a prespecified average, outcome-weighted averaging, and Meta-LR on identical allowed partitions, with stated tuning budgets. Each inference object must match the evaluated procedure: if deployment averages folds, assess that averaging procedure on untouched labels, rather than treating a row's single held-out fit as interchangeable. Save identifiers, true labels, probabilities, predictions, class ordering, and fold indices for valid paired analysis.
-
-Fourth, tie additional experiments to the claims they would support. Marker-family and representation ablations are necessary for claims of feature benefit. Proper scores and reliability diagnostics are necessary for calibration claims. A permitted pretrained checkpoint on the same partitions is necessary for comparisons with transformers. Contextual error and subgroup studies, verified annotations, and an appropriate sampling frame are necessary for population or moderation claims. None follows from an aggregate OOF score alone.
-
-Fifth, serialize and reload the complete raw-text prediction pipeline in a fresh process. Verify probability and label equivalence before reporting component sizes, total bytes, peak RAM, and latency with hardware, batch size, warmup, and repeated measurements~\cite{pineau2021reproducibility}. State training costs separately from inference. Store library versions, fitted calibration objects, LightGBM stopping points, and ensemble weights. Define any contest NOP according to its authoritative rules, and do not solve a score equation for a nominal count.
-
-Finally, maintain a claim ledger linking each result to source operations, original outputs, measurement boundaries, and limitations. Keep the current notebook, older submissions, and archived drafts distinguishable. A source correction, a successful CSV save, a portal receipt, and a leaderboard measurement are separate evidence events.
+Preserve IDs, labels, folds, probabilities, versions, convergence warnings, fitted objects and stopping choices. Serialize/reload the complete raw-text predictor and check probability equivalence before measuring bytes, peak RAM, latency or energy~\cite{pineau2021reproducibility}. Define contest NOP using its original rules. Supplement S2 supplies the runnable LR script and complete stacking protocol; unperformed studies retain explicit author tasks.
 
 \section{Limitations and Responsible Interpretation}
 \label{sec:limitations}
-The updated source and retained outputs are inspectable, and the supplied CSVs agree with its printed supports. However, no hash recorded during the historical run establishes that those exact bytes were used. The audit does not rerun training, recover missing OOF rows, inspect fitted model states, or verify a platform submission. Unknown package versions and contradictory device metadata limit replay. Exact-string duplication is checked; semantic duplicates and shared-user/thread structure are not.
+The updated source and retained outputs are inspectable, and the supplied CSVs agree with its printed supports. However, no hash recorded during the historical run establishes that those exact bytes were used. The audit regenerates folds, checks a new export, and executes a controlled LR comparison. It does not recover historical OOF rows, inspect historical fitted states, or verify platform acceptance. Unknown package versions and contradictory device metadata limit replay. Exact-string duplication, conflicting labels and regenerated cross-fold allocation are checked. Semantic duplicates and shared-user/thread structure remain unexamined.
 
 The threats are distinct: internal, because fitting and selection use evaluation information; external, because one record does not establish a population claim; construct-related, because label definitions lack a complete annotation manual; statistical, because folds and selection outcomes are dependent; and measurement-related, because the counted identity object differs from the selected predictor. Neither the direction of score distortion nor deployment cost is measured.
 
@@ -395,12 +440,15 @@ The three-way argmax is a research prediction, not a moderation policy. Substrin
 
 \section{Conclusion}
 \label{sec:conclusion}
-This case study reconstructs the updated LightBanglaHC record: 47,817 training rows, four fitted TF-IDF branches, six base candidates, a Meta-LR component, and a selected weighted ensemble. Its reconstructed macro-F1 0.531418 agrees with the notebook's 0.5314; the rounded comparison with LR\_C3 at 0.5221 remains descriptive. The original five-fold TinyLinear numbers and supplied NOP-39 CSV belong to other versions and cannot verify this execution.
+This case study reconstructs the updated ensemble record: 47,817 training rows, four fitted TF-IDF branches, six base candidates, a Meta-LR component, and a selected weighted ensemble. Its reconstructed macro-F1 0.531418 agrees with the notebook's 0.5314; the rounded comparison with LR\_C3 at 0.5221 remains descriptive. Regenerated folds reveal repeated and conflicting text groups; the new CSV matches recorded export structure and class totals. Historical versions remain supplemental.
 
 Three findings transfer. Row-level OOF exclusion does not isolate a full procedure when evaluation labels remain ancestors of meta-training features, stopping choices, or combination weights. A zero-parameter identity operation does not account for the fitted state that produces harmful-content predictions. A fractional denominator selected to achieve a desired score is not a parameter measurement. Every predictive or efficiency claim should name its inference object, fitting and selection ancestry, accounting boundary, and supporting evidence. This remains an inspectable methodological case, not a validated deployment system.
 
-\subsubsection*{Disclosure of Interests.}
-Funding, competing interests, ethics review or exemption, data permissions, and annotator-welfare information were not supplied with the inspected artifacts. This is not a declaration of no funding or no interests; authors must finalize applicable disclosures before submission. This revision used AI-assisted literature organization, drafting, source inspection, arithmetic checking, and typesetting. It produced no new training results and authorized no data use.
+\subsubsection*{Data and Code Availability.}
+The review artifact contains source, CSV checks, fold indices, scripts, outputs and a digest ledger. \AuthorTodo{insert an anonymous review-artifact URL and permanent dataset citation permitted by its terms}. \AuthorTodo{insert the approved public code/archive URL after blind review}. The publicly named repository is documented in the author revision report; it is not substituted for an anonymous review link. Release availability does not itself establish redistribution permission.
+
+\subsubsection*{Author Declarations.}
+\AuthorTodo{state actual funding or an author-confirmed no-funding declaration}. \AuthorTodo{state competing interests}. \AuthorTodo{state documented ethics approval/exemption, collection basis, data-use and redistribution permissions}. \AuthorTodo{disclose the prior manuscript's venue/status, overlap and any simultaneous consideration}. AI assistance was used for literature organization, source inspection, arithmetic/data checks, drafting and typesetting. \AuthorTodo{all authors approve this disclosure and the final text; document any additional AI use}.
 
 \bibliographystyle{ijcvsplatex-num}
 \bibliography{references}
