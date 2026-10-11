@@ -1,0 +1,182 @@
+\begin{thebibliography}{10}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\expandafter\ifx\csname href\endcsname\relax
+  \def\href#1#2{#2} \def\path#1{#1}\fi
+
+\bibitem{schwartz2020greenai}
+R.~Schwartz, J.~Dodge, N.~A. Smith, O.~Etzioni, Green {AI}, Communications of
+  the ACM 63~(12) (2020) 54--63.
+\newblock \href {http://dx.doi.org/10.1145/3381831}
+  {\path{doi:10.1145/3381831}}.
+
+\bibitem{wolpert1992stacked}
+D.~H. Wolpert, Stacked generalization, Neural Networks 5~(2) (1992) 241--259.
+\newblock \href {http://dx.doi.org/10.1016/S0893-6080(05)80023-1}
+  {\path{doi:10.1016/S0893-6080(05)80023-1}}.
+
+\bibitem{varma2006bias}
+S.~Varma, R.~Simon, Bias in error estimation when using cross-validation for
+  model selection, BMC Bioinformatics 7~(1) (2006) 91.
+\newblock \href {http://dx.doi.org/10.1186/1471-2105-7-91}
+  {\path{doi:10.1186/1471-2105-7-91}}.
+
+\bibitem{cawley2010overfitting}
+G.~C. Cawley, N.~L.~C. Talbot,
+  \href{https://jmlr.org/papers/v11/cawley10a.html}{On over-fitting in model
+  selection and subsequent selection bias in performance evaluation}, Journal
+  of Machine Learning Research 11~(70) (2010) 2079--2107.
+\newline\urlprefix\url{https://jmlr.org/papers/v11/cawley10a.html}
+
+\bibitem{kapoor2023leakage}
+S.~Kapoor, A.~Narayanan, Leakage and the reproducibility crisis in
+  machine-learning-based science, Patterns 4~(9) (2023) 100804.
+\newblock \href {http://dx.doi.org/10.1016/j.patter.2023.100804}
+  {\path{doi:10.1016/j.patter.2023.100804}}.
+
+\bibitem{herwill2026materials}
+{HerWILL}, {HerWILL: AI for Digital Safety Datathon 2026}: supplied competition
+  description and dataset materials, operational source supplied with the audit
+  artifacts; permanent official citation and scoring implementation require
+  author verification (2026).
+
+\bibitem{davidson2017automated}
+T.~Davidson, D.~Warmsley, M.~Macy, I.~Weber, Automated hate speech detection
+  and the problem of offensive language, Proceedings of the International AAAI
+  Conference on Web and Social Media 11~(1) (2017) 512--515.
+\newblock \href {http://dx.doi.org/10.1609/icwsm.v11i1.14955}
+  {\path{doi:10.1609/icwsm.v11i1.14955}}.
+
+\bibitem{rottger2021hatecheck}
+P.~R{\"o}ttger, B.~Vidgen, D.~Nguyen, Z.~Waseem, H.~Margetts, J.~Pierrehumbert,
+  {H}ate{C}heck: Functional tests for hate speech detection models, in:
+  C.~Zong, F.~Xia, W.~Li, R.~Navigli (Eds.), Proceedings of the 59th Annual
+  Meeting of the Association for Computational Linguistics and the 11th
+  International Joint Conference on Natural Language Processing (Volume 1: Long
+  Papers), Association for Computational Linguistics, Online, 2021, pp. 41--58.
+\newblock \href {http://dx.doi.org/10.18653/v1/2021.acl-long.4}
+  {\path{doi:10.18653/v1/2021.acl-long.4}}.
+
+\bibitem{blodgett2020language}
+S.~L. Blodgett, S.~Barocas, H.~Daum{\'e}~III, H.~Wallach, Language (technology)
+  is power: A critical survey of ``bias'' in {NLP}, in: D.~Jurafsky, J.~Chai,
+  N.~Schluter, J.~Tetreault (Eds.), Proceedings of the 58th Annual Meeting of
+  the Association for Computational Linguistics, Association for Computational
+  Linguistics, Online, 2020, pp. 5454--5476.
+\newblock \href {http://dx.doi.org/10.18653/v1/2020.acl-main.485}
+  {\path{doi:10.18653/v1/2020.acl-main.485}}.
+
+\bibitem{romim2022bdshs}
+N.~Romim, M.~Ahmed, M.~S. Islam, A.~Sen~Sharma, H.~Talukder, M.~R. Amin,
+  \href{https://aclanthology.org/2022.lrec-1.552/}{{BD}-{SHS}: A benchmark
+  dataset for learning to detect online {B}angla hate speech in different
+  social contexts}, in: N.~Calzolari, F.~B{\'e}chet, P.~Blache, K.~Choukri,
+  C.~Cieri, T.~Declerck, S.~Goggi, H.~Isahara, B.~Maegaard, J.~Mariani,
+  H.~Mazo, J.~Odijk, S.~Piperidis (Eds.), Proceedings of the Thirteenth
+  Language Resources and Evaluation Conference, European Language Resources
+  Association, Marseille, France, 2022, pp. 5153--5162.
+\newline\urlprefix\url{https://aclanthology.org/2022.lrec-1.552/}
+
+\bibitem{bhattacharjee2022banglabert}
+A.~Bhattacharjee, T.~Hasan, W.~Ahmad, K.~S. Mubasshir, M.~S. Islam, A.~Iqbal,
+  M.~S. Rahman, R.~Shahriyar, {BanglaBERT}: Language model pretraining and
+  benchmarks for low-resource language understanding evaluation in {Bangla},
+  in: M.~Carpuat, M.-C. de~Marneffe, I.~V. Meza~Ruiz (Eds.), Findings of the
+  Association for Computational Linguistics: NAACL 2022, Association for
+  Computational Linguistics, Seattle, United States, 2022, pp. 1318--1327.
+\newblock \href {http://dx.doi.org/10.18653/v1/2022.findings-naacl.98}
+  {\path{doi:10.18653/v1/2022.findings-naacl.98}}.
+
+\bibitem{bender2018datastatements}
+E.~M. Bender, B.~Friedman, Data statements for natural language processing:
+  Toward mitigating system bias and enabling better science, Transactions of
+  the Association for Computational Linguistics 6 (2018) 587--604.
+\newblock \href {http://dx.doi.org/10.1162/tacl_a_00041}
+  {\path{doi:10.1162/tacl_a_00041}}.
+
+\bibitem{vanderlaan2007super}
+M.~J. van~der Laan, E.~C. Polley, A.~E. Hubbard, Super learner, Statistical
+  Applications in Genetics and Molecular Biology 6~(1), article 25.
+\newblock \href {http://dx.doi.org/10.2202/1544-6115.1309}
+  {\path{doi:10.2202/1544-6115.1309}}.
+
+\bibitem{hastie2009elements}
+T.~Hastie, R.~Tibshirani, J.~Friedman, The Elements of Statistical Learning:
+  Data Mining, Inference, and Prediction, 2nd Edition, Springer, New York,
+  2009, section 7.10.2.
+\newblock \href {http://dx.doi.org/10.1007/978-0-387-84858-7}
+  {\path{doi:10.1007/978-0-387-84858-7}}.
+
+\bibitem{niculescumizil2005probabilities}
+A.~Niculescu-Mizil, R.~Caruana, Predicting good probabilities with supervised
+  learning, in: Proceedings of the 22nd International Conference on Machine
+  Learning, ICML '05, Association for Computing Machinery, 2005, pp. 625--632.
+\newblock \href {http://dx.doi.org/10.1145/1102351.1102430}
+  {\path{doi:10.1145/1102351.1102430}}.
+
+\bibitem{vaicenavicius2019calibration}
+J.~Vaicenavicius, D.~Widmann, C.~Andersson, F.~Lindsten, J.~Roll, T.~Sch{\"o}n,
+  \href{https://proceedings.mlr.press/v89/vaicenavicius19a.html}{Evaluating
+  model calibration in classification}, in: K.~Chaudhuri, M.~Sugiyama (Eds.),
+  Proceedings of the Twenty-Second International Conference on Artificial
+  Intelligence and Statistics, Vol.~89 of Proceedings of Machine Learning
+  Research, PMLR, 2019, pp. 3459--3467.
+\newline\urlprefix\url{https://proceedings.mlr.press/v89/vaicenavicius19a.html}
+
+\bibitem{bengio2004variance}
+Y.~Bengio, Y.~Grandvalet,
+  \href{https://www.jmlr.org/papers/v5/grandvalet04a.html}{No unbiased
+  estimator of the variance of {K}-fold cross-validation}, Journal of Machine
+  Learning Research 5 (2004) 1089--1105.
+\newline\urlprefix\url{https://www.jmlr.org/papers/v5/grandvalet04a.html}
+
+\bibitem{dror2018significance}
+R.~Dror, G.~Baumer, S.~Shlomov, R.~Reichart, The hitchhiker's guide to testing
+  statistical significance in natural language processing, in: I.~Gurevych,
+  Y.~Miyao (Eds.), Proceedings of the 56th Annual Meeting of the Association
+  for Computational Linguistics (Volume 1: Long Papers), Association for
+  Computational Linguistics, Melbourne, Australia, 2018, pp. 1383--1392.
+\newblock \href {http://dx.doi.org/10.18653/v1/P18-1128}
+  {\path{doi:10.18653/v1/P18-1128}}.
+
+\bibitem{henderson2020systematic}
+P.~Henderson, J.~Hu, J.~Romoff, E.~Brunskill, D.~Jurafsky, J.~Pineau,
+  \href{https://jmlr.org/papers/v21/20-312.html}{Towards the systematic
+  reporting of the energy and carbon footprints of machine learning}, Journal
+  of Machine Learning Research 21~(248) (2020) 1--43.
+\newline\urlprefix\url{https://jmlr.org/papers/v21/20-312.html}
+
+\bibitem{pineau2021reproducibility}
+J.~Pineau, P.~Vincent-Lamarre, K.~Sinha, V.~Larivi{\`e}re, A.~Beygelzimer,
+  F.~d'Alch{\'e} Buc, E.~Fox, H.~Larochelle,
+  \href{https://jmlr.org/papers/v22/20-303.html}{Improving reproducibility in
+  machine learning research ({A} report from the {NeurIPS} 2019 reproducibility
+  program)}, Journal of Machine Learning Research 22~(164) (2021) 1--20.
+\newline\urlprefix\url{https://jmlr.org/papers/v22/20-303.html}
+
+\bibitem{mitchell2019modelcards}
+M.~Mitchell, S.~Wu, A.~Zaldivar, P.~Barnes, L.~Vasserman, B.~Hutchinson,
+  E.~Spitzer, I.~D. Raji, T.~Gebru, Model cards for model reporting, in:
+  Proceedings of the Conference on Fairness, Accountability, and Transparency,
+  Association for Computing Machinery, 2019, pp. 220--229.
+\newblock \href {http://dx.doi.org/10.1145/3287560.3287596}
+  {\path{doi:10.1145/3287560.3287596}}.
+
+\bibitem{ke2017lightgbm}
+G.~Ke, Q.~Meng, T.~Finley, T.~Wang, W.~Chen, W.~Ma, Q.~Ye, T.-Y. Liu,
+  \href{https://papers.neurips.cc/paper_files/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html}{{LightGBM}:
+  A highly efficient gradient boosting decision tree}, in: Advances in Neural
+  Information Processing Systems, Vol.~30, 2017.
+\newline\urlprefix\url{https://papers.neurips.cc/paper_files/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html}
+
+\bibitem{pedregosa2011scikit}
+F.~Pedregosa, G.~Varoquaux, A.~Gramfort, V.~Michel, B.~Thirion, O.~Grisel,
+  M.~Blondel, P.~Prettenhofer, R.~Weiss, V.~Dubourg, J.~Vanderplas, A.~Passos,
+  D.~Cournapeau, M.~Brucher, M.~Perrot, {\'E}.~Duchesnay,
+  \href{https://jmlr.org/papers/v12/pedregosa11a.html}{Scikit-learn: Machine
+  learning in {Python}}, Journal of Machine Learning Research 12~(85) (2011)
+  2825--2830.
+\newline\urlprefix\url{https://jmlr.org/papers/v12/pedregosa11a.html}
+
+\end{thebibliography}

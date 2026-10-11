@@ -1,0 +1,4 @@
+-r requirements-lr.txt
+lightgbm==4.7.0
+narwhals==2.27.1
+# Prospective new-environment comparison; historical versions remain unknown.

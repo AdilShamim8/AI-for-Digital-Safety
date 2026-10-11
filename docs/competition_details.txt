@@ -1,0 +1,107 @@
+HerWILL: AI for Digital Safety Datathon 2026
+Overview & Description
+The primary objective of this competition is to advance the development of Machine Learning and Deep Learning models that can accurately and efficiently classify harmful content on social media in the form of text. Harmful language whether explicit, subtle or indirect can negatively impact individuals, communities and public discourse, particularly in online environments where content spreads rapidly and at scale.
+By developing robust harmful content classification systems, this competition aims to contribute to safer digital spaces and encourage responsible AI solutions that support respectful communication and protect vulnerable groups. The HerWILL: AI for Digital Safety Datathon 2026 seeks to foster meaningful engagement across the Data Science, Natural Language Processing, Social Sciences and Digital Safety research communities, while emphasizing both technical excellence and social responsibility.
+Start:
+ Apr 17, 2026
+Close:
+ Apr 24, 2026
+Dataset Description
+Participants will work with a large-scale dataset of approximately 59,772 manually annotated social media posts drawn from publicly accessible Bangla, English, and Banglish platforms. The data consists of comments, captions, headlines, and status updates reflecting real-world linguistic diversity and complexity.
+The task is a multi-class text classification problem where participants must classify social media text into three categories:
+0:
+ Explicitly Toxic/Hateful
+1:
+ Subtly Toxic (e.g., sarcasm, coded language)
+2:
+ Non-toxic/Neutral
+Evaluation Metric
+We use a custom metric called the 
+F1NOP Score
+, which strongly rewards efficient models, not just accurate ones. Based on the provided formula image, it is defined as:
+F1NOP = (0.4 × F1 Score) + (0.6 × (1 / (log(NOP + 1) + ε)))
+Where the F1 Score is the macro F1 across 3 classes, NOP is the Number of Parameters, and ε = 5 × 10⁻¹⁶.
+Number of Parameters (NOP)
+Participants must compute model parameters using the thop library as follows:
+from thop import profile
+def measure_nop(model, inputs):
+    flops, params = profile(model, inputs=(inputs['input_ids'], inputs['attention_mask']))
+    return flops, params
+The NOP must be reported in the submission file.
+Submission Format
+Submissions should follow the provided sample_submission.csv format:
+id
+y_pred
+parameters
+ 
+1
+0
+123456
+2
+2
+123456
+Files & Columns
+train.csv
+ - The training set containing id, text, and y columns.
+test.csv
+ - The test set containing id and text columns.
+sample_submission.csv
+ - A sample submission file with id, y_pred, and parameters columns.
+Column Name
+Description
+ 
+id
+Unique identifier for each post
+text
+Social media post content
+y
+Target class label (0, 1, or 2)
+y_pred
+Predicted class label
+parameters
+NOP of your model
+Metadata & License
+Total Files:
+ 3 (Size: 6.8 MB)
+License:
+ Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
+Relevance Paper
+ 
+Validating the Stacking & Classical Ensemble Approach
+These papers will help you justify why relying on classical models (Logistic Regression, Naïve Bayes, SVC, SGD) is a mathematically sound choice for digital safety, not just a metric hack.
+Towards Stacking Ensemble-Based Fine-Grained Hostile Class Classification
+Why it's relevant:
+ This paper is almost a perfect mirror of your classification strategy. The authors implement a stacking ensemble of heterogeneous classical classifiers (including LR, SVM, SGD, and Naïve Bayes) using TF-IDF features. They explicitly argue that achieving high F1 scores in digital safety tasks does not require complex Deep Learning Models.
+Toxic Comment Classification Using Ensemble Machine Learning Techniques
+Why it's relevant:
+ This research demonstrates that an ensemble approach using traditional ML algorithms over TF-IDF features makes the model highly robust. It specifically notes that TF-IDF successfully captures toxicity patterns without the computational expense or parameter bloat of deep word embeddings.
+The Parameter Efficiency & DistilBERT Comparison
+To contextualize your ~1,000,000× improvement over the DistilBERT baseline, use these papers to discuss the trade-offs between model complexity and performance.```
+AI-Based Approaches for Multi-Class Text Classification in Social Media: A Comparative Study
+Why it's relevant:
+ This study deeply examines the engineering trade-offs between model complexity, raw accuracy, and computational resource requirements. It is a great citation to drop when discussing why large transformer architectures are often inefficient overkill for highly specific text classification tasks.
+Detection of Toxicity in Social Media Based on Natural Language Processing Methods
+Why it's relevant:
+ This provides a comprehensive comparative study between classical ML and deep learning models for toxic comment detection. It serves as an excellent foundational citation for your methodology section when you introduce your DistilBERT baselines.
+1. Linguistic Domain: Bangla-English Code-Mixed Toxicity
+Since your notebook handles code-mixed (Bangla, English, and Banglish) text and incorporates specific features to catch subtle safety threats, this recent reference is highly applicable:```
+MixSarc: A Bangla-English Code-Mixed Corpus for Implicit Meaning Identification
+:
+ This paper explores the unique linguistic challenges of Bangla-English digital text, particularly focusing on how content moderation pipelines degrade when encountering sarcasm, subtle offense, and implicit vulgarity. It serves as a strong baseline to defend why your handcrafted preprocessing and lexical token strategies were necessary.
+2. Methodological Rationale: Parameter Efficiency
+Your strategy drops the model footprint from multi-million parameter architectures down to a 52-parameter neural wrapper. To justify why optimizing parameter constraints is an essential pursuit in edge deployment or ethical AI, look into the parameter-versus-performance literature:
+Parameter-efficient fine-tuning for low-resource text classification: a comparative study of LoRA, IA3, and ReFT
+:
+ This empirical study analyzes the efficiency-performance trade-offs during text classification in low-resource settings. Your paper can cite this to compare traditional PEFT methodologies against your extreme boundary case of feature-model separation.
+3. Competition Background & Metric Origins
+To properly introduce the experimental environment and structure the problem statement, you should cite the operational background of the datathon and its specialized metric:
+HerWILL: AI for Equality Datathon 2024
+:
+ This highlights the foundational implementation of the evaluation layout where the hosting body first established the 
+thop
+ tracking configuration to penalize over-parameterized model bloat.
+HerWILL datathon draws participants from 45 countries
+:
+ An authoritative overview documenting the core objective of the Datathon—specifically the requirement to address code-mixed safety challenges while evaluating solutions through the custom efficiency equation:
+$$F1NOP = \frac{\text{Macro-F1}}{\text{NOP} + \epsilon}$$
+Where $\text{NOP}$ represents the counted Number of Parameters and $\epsilon = 5 \times 10^{-16}$ handles numerical stability.

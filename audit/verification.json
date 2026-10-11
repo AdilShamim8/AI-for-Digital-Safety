@@ -102,8 +102,19 @@
     },
     "recorded_main_export_nop": 0.183,
     "recorded_profiled_identity_nop": 0,
-    "generated_csvs_supplied": false,
-    "fresh_prediction_replay_performed": false
+    "generated_csvs_supplied": true,
+    "fresh_prediction_replay_performed": false,
+    "supplied_updated_csv_check": {
+      "sha256": "2282e24132cf84e75dafe15a50ccba79b5ee9ce96e3755d3e2443deb34e3c4a2",
+      "predictions": {
+        "0": 6414,
+        "1": 4401,
+        "2": 1140
+      },
+      "nop_field": 0.183,
+      "ids_order_match": true,
+      "historical_prediction_origin_authenticated": false
+    }
   },
   "manuscript_arithmetic": {
     "input_provenance": "updated notebook retained confusion figure; no historical prediction replay",
@@ -140,7 +151,7 @@
     "three_major_training_sections_seconds": 9029.5
   },
   "unresolved": [
-    "updated generated submission CSVs and row-level OOF probabilities not supplied",
+    "historical row-level OOF probabilities and fitted states not supplied; supplied updated CSV checked",
     "authoritative scoring equation/log base and parameter-count boundary",
     "updated fitted artifacts, historical runtime/package versions, and prediction replay",
     "two coauthor names, emails/affiliations, author approval, and disclosures"

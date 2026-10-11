@@ -1,15 +1,21 @@
 {
-  "pdf_pages": 10,
-  "active_citations": 22,
-  "tables": 5,
+  "revision_date": "2026-10-11",
+  "named_pdf_pages": 10,
+  "public_datathon_pdf_pages": 10,
+  "active_citations_named": 23,
+  "active_citations_public_datathon": 22,
+  "tables": 7,
   "displayed_equations": 6,
-  "clean_source_zip_build": "passed",
+  "abstract_words": 191,
   "undefined_citations_or_references": false,
   "overfull_horizontal_boxes": false,
-  "all_pages_visually_inspected": true,
+  "inherited_warnings": "sectsty underbar/underline; internal frontmatter vertical boxes; rendered pages inspected",
+  "all_20_pages_visually_inspected": true,
   "author_metadata_blank": true,
   "class_and_bibliography_style_match_supplied_template_bytes": true,
-  "new_training_performed": false,
+  "new_training_performed": "six full-data LR fits only",
+  "all_six_lr_fits_reached_iteration_limit": true,
+  "nested_stack_performed": false,
   "remote_pr_created": false,
-  "remote_write_failure": "GitHub integration HTTP403; CLI has no GitHub credentials"
+  "remote_write_failure": "GitHub integration HTTP403 Resource not accessible by integration"
 }
