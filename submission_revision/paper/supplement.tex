@@ -1,0 +1,120 @@
+% ICIEV / IJCVSP review manuscript audited against the updated notebook.
+% Legacy unused PSTricks dependency: use color-only fallback when unavailable.
+\IfFileExists{pstcol.sty}{}{%
+  \RequirePackage{xcolor}
+  \expandafter\def\csname ver@pstcol.sty\endcsname{2026/10/10 color-only compatibility fallback}
+}
+\documentclass[doublecolumn]{ijcvsplatex}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{etoolbox}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{url}
+\urlstyle{sf}
+\usepackage[hidelinks,bookmarks=false]{hyperref}
+
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+% Suppress the template's example acceptance, publication dates, and volume.
+\makeatletter
+\def\@received{}
+\def\@revised{}
+\def\@accepted{}
+\def\@online{}
+\def\@vol{}
+\patchcmd{\MaketitleBox}{Article History:}{}{}{}
+% Publication volume/year/pages are publisher-assigned, not author inventions.
+\def\ps@pprintTitle{\def\@oddhead{\footnotesize International Journal of Computer Vision and Signal Processing\hfill}\let\@evenhead\@oddhead\let\@oddfoot\@empty\let\@evenfoot\@empty}
+\makeatother
+\fancyhead[RE]{Int. J. Computer Vision Signal Process.}
+\newcommand{\CaseName}{LightBanglaHC}
+\newcommand{\CompetitionName}{the HerWILL AI for Digital Safety Datathon 2026}
+\input{new-evidence}
+\interdisplaylinepenalty=2500
+\emergencystretch=2em
+
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{18pt}
+\setlength{\@dblfptop}{0pt}
+\setlength{\@dblfpsep}{18pt}
+\makeatother
+\begin{document}
+\begin{frontmatter}
+\title{\LARGE LightBanglaHC Audit: Supplementary Material}
+\begin{abstract}
+This supplement documents version boundaries, new execution settings, convergence diagnostics, duplicate checks, conditional uncertainty and artifact identity. Historical outputs are R evidence; new assistant-executed comparisons are N evidence. It accompanies the anonymous review manuscript and reproducibility package.
+\end{abstract}
+\begin{keyword}
+Evaluation audit \sep Reproducibility \sep Stacking \sep Evidence provenance.
+\end{keyword}
+\end{frontmatter}
+
+\section{S1: Historical Versions and Evidence Boundaries}
+The primary record is the updated three-class notebook: 47,817 training rows, 11,955 unlabeled test rows, three stratified folds, six base candidates, Meta-LR and a selected weighted ensemble. Its retained pooled macro-F1 is 0.5314. No original fitted vectorizers, models, historical OOF probability file or authenticated platform receipt was retained in the inspected source. New probabilities are not substituted for those historical states.
+
+The earlier TinyLinear internal draft uses 254,983 features and five folds. It records macro-F1 0.5295 for a 39-parameter head versus 0.5246 for logistic regression. Five test heads imply 195 head parameters; five three-class LR fits imply $5[3(254{,}983)+3]=3{,}824{,}760$ coefficients and intercepts. Those counts describe that older path, not the updated six-base-LR subtotal 4,141,908. The four-class files are a separate task version. Old NOP-39 and updated NOP-0.183 CSVs are distinct artifacts. The earlier manuscript was never submitted or published; there is no simultaneous submission.
+
+Unreceipted public/private scores are excluded from scientific results. Assuming the undocumented candidate rule $S=0.4F+0.6/\ln(1+N)$, $N=0.183$ gives an efficiency term 3.5702898 (A). This is a conditional calculation, not a verified organizer rule. Valid implied F1 values under competing formulas do not identify the rule. No author intent or organizer acceptance is inferred. The author-facing response separately records the conditional arithmetic and its assumptions.
+
+\section{S2: New Executions}
+\subsection{Environment and Initial Paired LR}
+New runs use Python 3.12.14, scikit-learn 1.8.0, NumPy 2.3.5, SciPy 1.17.0 and pandas 2.2.3 on CPU. They are assistant-executed N evidence, not author-independent replication or Kaggle execution. Single-thread BLAS and OpenMP settings limit hidden parallelism. Historical package versions are unknown.
+
+The initial comparison uses the notebook cleaner and signals, all four source TF-IDF branches, unchanged row order, and three shuffled stratified folds with seed 42. LR uses multinomial SAGA, $C=3$, tolerance $10^{-3}$ and 2,000 iterations. Class weights are computed once from all labels and held fixed in both arms; this isolates representation-fit scope, not every evaluation exposure. Global fitting gives 0.522060895664; training-fold fitting gives 0.518871561557. The difference is 0.003189334107. All six fits reach 2,000 iterations. Matching the rounded historical LR score does not authenticate that earlier run.
+
+\subsection{Convergence Sensitivity}
+LBFGS uses the same $C=3$ multinomial L2 objective, tolerance $10^{-6}$ and maximum 2,000 iterations. The global and fold-fitted arms retain fixed global class weights. Group-aware and exclusion arms use local class weights and fold-fitted TF-IDF. These additional arms change the split or corpus and are not paired estimates of duplication alone. The global-minus-fold difference is 0.001749622276, compared with 0.003189334107 at the SAGA cap. Optimization therefore materially changes this protocol sensitivity. Gradient diagnostics use normalized class-weighted multinomial loss plus $\|W\|_2^2/(2C\sum_i s_i)$, leaving intercepts unpenalized.
+
+\input{convergence-table}
+
+\subsection{Reduced Nested Stacking}
+The base order is LR\_C3, SGD, CNB, giving nine probabilities in fixed class order $(0,1,2)$. LR keeps the source SAGA budget above. SGD uses modified Huber loss, $\alpha=10^{-4}$, 200 iterations and local class weights. CNB uses only the two character branches, $\alpha=0.05$ and \texttt{norm=True}. Both have two-fold isotonic calibration and explicit \texttt{ensemble=True}. Calibrators fit within each permitted base training subset. TF-IDF is fitted before that internal calibration split but never on outer assessment rows. Meta-LR uses $C=10$, 500 iterations and outer-training class weights. Explicit retention resolves an unknown historical default for this new run rather than retroactively assigning it to the notebook.
+
+Each outer fold first fits bases on all outer training rows to produce assessment probabilities. These probabilities are identical in both comparison arms. Nonnested meta training uses other rows of the common outer-OOF matrix, whose base fits include the current assessment labels. Nested meta training instead rebuilds three-fold base OOF features inside the current outer training subset. There are three outer base sets and nine inner base sets, each with three candidates. Meta fitting uses only allowed training labels. This protects outer labels in the nested arm while fixing the assessment predictor across arms. The smaller inner base-training samples are part of this protocol change.
+
+Pooled nonnested macro-F1 is \NonNested{}; nested macro-F1 is \Nested{}; the signed nonnested-minus-nested difference is \StackDifference. No LightGBM, threshold tuning, squared-F1 weights or final candidate selection enters this contrast. It therefore does not quantify the optimism of the complete historical weighted ensemble. All 12 LR fits reach the 2,000-iteration cap. Nested Meta-LR stops at 43, 43 and 40 iterations (outer folds 1, 2 and 3). Iteration records and all inner meta-training probabilities are retained.
+
+\subsection{Duplicate Definitions and Split Sensitivities}
+Raw duplicates have identical strings after CSV missing-value handling. Normalized duplicates have identical output of the notebook's cleaner $C(x)$; the signal function is not part of that grouping key. All group members, including conflicting labels, remain together in cleaner-group splits. \texttt{StratifiedGroupKFold} uses three folds, shuffling and seed 42. Integer group codes avoid unnecessary fixed-width Unicode storage; they do not alter equality groups.
+
+\begin{table*}[t]
+\small\centering
+\caption{New duplicate diagnostics (N). Percentages use all 47,817 rows except the explicitly reduced corpus.}
+\begin{tabularx}{\textwidth}{P{3.4cm}*{3}{>{\centering\arraybackslash}X}>{\centering\arraybackslash}P{2.0cm}}
+\toprule
+Criterion / split & Repeated groups / rows & Spanning groups / rows & Conflicting groups / rows & Spanning rows (\%) \\
+\midrule
+Raw, row-stratified & 461 / 1,082 & 308 / 771 & 52 / 130 & 1.6124 \\
+Cleaner, row-stratified & 495 / 1,200 & 336 / 880 & 67 / 200 & 1.8403 \\
+Cleaner, group-stratified & 495 / 1,200 & 0 / 0 & 67 / 200 & 0 \\
+Raw, excluded, original folds & 153 / 311 & 0 / 0 & 16 / 34 & 0 \\
+Raw, excluded then resplit & 153 / 311 & 101 / 206 & 16 / 34 & 0.4379 \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+The exclusion arm removes all 771 rows in the 308 raw groups that cross the original regenerated folds, leaving 47,046 rows. The primary exclusion comparison retains original fold IDs and therefore has zero spanning raw-text groups. An additional resplit sensitivity regenerates row-stratified folds with seed 42; it still has 101 spanning groups (206 rows). Only the cleaner-group arm guarantees zero $C(x)$ overlap between fitting and assessment. Conflicting raw groups cover 0.2719\% of the original corpus; cleaner-conflict groups cover 0.4183\%. No conflict label is silently changed.
+
+\subsection{Conditional Paired Bootstrap}
+We rescore fixed paired OOF predictions, never retraining inside this bootstrap. For row resampling, the $(y,\hat y_A,\hat y_B)$ triplets define 27 cells. For each true class, multinomial sampling of its nine empirical triplet frequencies is equivalent to resampling paired rows within that class. We use 5,000 replicates and seed 42. Each replicate produces both confusion matrices and their macro-F1 difference. The percentile 95\% interval is \RowCI.
+
+For cluster resampling, the unit is a unique exact raw string. Sample the same number of groups with replacement and carry every group row together, preserving label conflicts; replicate row counts can change. We use 2,000 replicates with seed 42. The percentile interval is \ClusterCI. Both intervals condition on the already fitted predictions. They omit training variability and do not establish independent user/thread sampling or a universal cross-validation variance estimate. A positive conditional interval is not a claim that global preprocessing improves out-of-sample generalization.
+
+\subsection{Verification and Reproduction}
+The package includes an unexecuted author replication notebook with embedded scripts. It writes new results to a separate output folder. Authors must actually run and review it before claiming author-independent replication. There is no invented Kaggle notebook link or screenshot. All released probability files are rescored against the supplied IDs/labels; class probabilities must be finite, nonnegative, normalized and in fixed class order. Nested and nonnested assessment rows must match. Full JSON records retain solver iterations, fit widths, environment and input/script digests.
+
+\section{Artifact Ledger}
+\input{ledger-table}
+The complete machine-readable ledger includes all released source, result and prediction files. Digests identify the currently supplied artifacts; they are not evidence that identical bytes were used during the historical datathon execution. The review package does not authenticate an original scoring rule, receipt, ethics record or additional dataset-use permission. Raw competition files are returned as supplied to the authors; a public redistribution grant is not inferred.
+
+\end{document}

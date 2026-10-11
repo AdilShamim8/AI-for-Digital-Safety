@@ -10,3 +10,10 @@ paper/iciev/*.sty -text
 *.docx binary
 *.png binary
 *.eps -text
+
+# Preserve the supplied template bytes, including vendor line endings/spacing.
+submission_revision/paper/*.sty whitespace=-blank-at-eol,cr-at-eol
+submission_revision/paper/*.bst whitespace=-blank-at-eol,-blank-at-eof
+submission_revision/paper/*.eps whitespace=-blank-at-eol
+# Recorded stdout is evidence; do not rewrite its trailing spaces.
+submission_revision/results/*_stdout.txt whitespace=-blank-at-eol

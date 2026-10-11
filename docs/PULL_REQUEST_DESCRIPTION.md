@@ -1,27 +1,7 @@
-# Revise LightBanglaHC audit with paired preprocessing evidence
+Complete the LightBanglaHC audit with the measured reduced nonnested/nested stacking comparison (macro-F1 0.517144/0.515690), optimizer sensitivity, duplicate-aware splits and conditional uncertainty checks. The ten-page anonymous paper includes S1/S2 summaries, and a three-page companion, scientific ledger, saved probabilities and author replication notebook are attached. Preserve the supplied template and original notebooks/CSV bytes.
 
-The paper previously traced validation exposures without measuring the
-preprocessing contrast. This revision adds full-data LR_C3 macro-F1
-0.5220608957 with global TF-IDF versus 0.5188715616 with fold-fitted TF-IDF.
-Identical folds and global weights are fixed; all six fits reached the
-2,000-iteration cap. No converged-optimum claim is made.
+Fix repository entry points and verification: update README/replication commands, verify citations and packaged companion files, validate all payload/scientific hashes and matching paper copies, scan for exposed token patterns, ignore build intermediates and keep independent reruns separate. New executions are tagged N and disclosed as assistant-executed.
 
-Additions include regenerated duplicate/conflict counts, a six-mechanism
-exposure taxonomy, approximate squared-F1 weights and a 191-word abstract.
-The 0.0008 ensemble gain is explicitly not a leakage bound. Correct historical
-arithmetic, original notebooks/data and template class/style remain unchanged.
-The supplied updated CSV is included and checked.
+Validation: `make verify`, `make verify-probabilities`, `make verify-followup` (106 scientific checks), Python syntax compilation and `git diff --check` passed. The PDF layout was visually verified in the preceding paper revision; original template assets are byte-identical. Original data/notebooks have no diff against main.
 
-Two 10-page review PDFs offer named or public-datathon wording. Both retain
-explicit TODOs for author facts and the unexecuted matched nested-stack
-comparison. Complete protocols are supplied without inventing results.
-
-Validation: paired OOF arrays/convergence records retained; artifact checks
-passed; both PDFs compiled with resolved references and no overfull horizontal
-boxes; all 20 pages inspected. Inherited frontmatter box/font warnings are
-documented. No historical fitted-state replay or portal upload occurred.
-
-Repository checks now detect missing/duplicate citations, stale Overleaf files,
-changed data/output hashes and incomplete paired results. Optional probability
-checks independently recompute both pooled F1 values and row/fold alignment.
-Make targets build either paper option. No credential is stored in the repo.
+Exact ethics/data-permission wording and author-independent replication remain factual author requirements. This change does not certify conference submission readiness, invent a platform-score receipt or claim a full historical ensemble replay.

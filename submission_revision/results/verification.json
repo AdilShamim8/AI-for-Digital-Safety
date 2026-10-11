@@ -1,0 +1,344 @@
+{
+  "status": "passed",
+  "checks": [
+    "global_oof.npz ID order",
+    "global_oof.npz labels",
+    "global_oof.npz finite nonnegative",
+    "global_oof.npz class-probability normalization",
+    "global_oof.npz seed-42 fold identity",
+    "global_oof.npz manual pooled score",
+    "within_fold_oof.npz ID order",
+    "within_fold_oof.npz labels",
+    "within_fold_oof.npz finite nonnegative",
+    "within_fold_oof.npz class-probability normalization",
+    "within_fold_oof.npz seed-42 fold identity",
+    "within_fold_oof.npz manual pooled score",
+    "Reduced stack completed",
+    "reduced_base_oof.npz ID order",
+    "reduced_base_oof.npz labels",
+    "reduced_base_oof.npz finite nonnegative",
+    "reduced_base_oof.npz class-probability normalization",
+    "reduced_base_oof.npz seed-42 fold identity",
+    "reduced_nonnested_oof.npz ID order",
+    "reduced_nonnested_oof.npz labels",
+    "reduced_nonnested_oof.npz finite nonnegative",
+    "reduced_nonnested_oof.npz class-probability normalization",
+    "reduced_nonnested_oof.npz seed-42 fold identity",
+    "reduced_nonnested_oof.npz manual pooled score",
+    "reduced_nested_oof.npz ID order",
+    "reduced_nested_oof.npz labels",
+    "reduced_nested_oof.npz finite nonnegative",
+    "reduced_nested_oof.npz class-probability normalization",
+    "reduced_nested_oof.npz seed-42 fold identity",
+    "reduced_nested_oof.npz manual pooled score",
+    "inner_meta_training_outer_1.npz ID order",
+    "inner_meta_training_outer_1.npz labels",
+    "inner_meta_training_outer_1.npz finite nonnegative",
+    "inner_meta_training_outer_1.npz class-probability normalization",
+    "inner_meta_training_outer_2.npz ID order",
+    "inner_meta_training_outer_2.npz labels",
+    "inner_meta_training_outer_2.npz finite nonnegative",
+    "inner_meta_training_outer_2.npz class-probability normalization",
+    "inner_meta_training_outer_3.npz ID order",
+    "inner_meta_training_outer_3.npz labels",
+    "inner_meta_training_outer_3.npz finite nonnegative",
+    "inner_meta_training_outer_3.npz class-probability normalization",
+    "nonnested outer 1 meta-refit probability identity",
+    "nonnested outer 1 meta refit below cap",
+    "nested outer 1 meta-refit probability identity",
+    "nested outer 1 meta refit below cap",
+    "nonnested outer 2 meta-refit probability identity",
+    "nonnested outer 2 meta refit below cap",
+    "nested outer 2 meta-refit probability identity",
+    "nested outer 2 meta refit below cap",
+    "nonnested outer 3 meta-refit probability identity",
+    "nonnested outer 3 meta refit below cap",
+    "nested outer 3 meta-refit probability identity",
+    "nested outer 3 meta refit below cap",
+    "Sensitivity completed",
+    "lbfgs_global_oof.npz ID order",
+    "lbfgs_global_oof.npz labels",
+    "lbfgs_global_oof.npz finite nonnegative",
+    "lbfgs_global_oof.npz class-probability normalization",
+    "lbfgs_global_oof.npz seed-42 fold identity",
+    "lbfgs_global_oof.npz manual pooled score",
+    "global no LBFGS iteration cap",
+    "global recorded gradient <= 1e-6",
+    "lbfgs_within_fold_oof.npz ID order",
+    "lbfgs_within_fold_oof.npz labels",
+    "lbfgs_within_fold_oof.npz finite nonnegative",
+    "lbfgs_within_fold_oof.npz class-probability normalization",
+    "lbfgs_within_fold_oof.npz seed-42 fold identity",
+    "lbfgs_within_fold_oof.npz manual pooled score",
+    "within_fold no LBFGS iteration cap",
+    "within_fold recorded gradient <= 1e-6",
+    "lbfgs_cleaner_group_oof.npz ID order",
+    "lbfgs_cleaner_group_oof.npz labels",
+    "lbfgs_cleaner_group_oof.npz finite nonnegative",
+    "lbfgs_cleaner_group_oof.npz class-probability normalization",
+    "lbfgs_cleaner_group_oof.npz seed-42 fold identity",
+    "lbfgs_cleaner_group_oof.npz manual pooled score",
+    "cleaner_group no LBFGS iteration cap",
+    "cleaner_group recorded gradient <= 1e-6",
+    "lbfgs_raw_excluded_oof.npz ID order",
+    "lbfgs_raw_excluded_oof.npz labels",
+    "lbfgs_raw_excluded_oof.npz finite nonnegative",
+    "lbfgs_raw_excluded_oof.npz class-probability normalization",
+    "lbfgs_raw_excluded_oof.npz seed-42 fold identity",
+    "lbfgs_raw_excluded_oof.npz manual pooled score",
+    "raw_excluded no LBFGS iteration cap",
+    "raw_excluded recorded gradient <= 1e-6",
+    "Fixed-fold exclusion completed",
+    "lbfgs_exclusion_fixedfold_oof.npz ID order",
+    "lbfgs_exclusion_fixedfold_oof.npz labels",
+    "lbfgs_exclusion_fixedfold_oof.npz finite nonnegative",
+    "lbfgs_exclusion_fixedfold_oof.npz class-probability normalization",
+    "lbfgs_exclusion_fixedfold_oof.npz seed-42 fold identity",
+    "lbfgs_exclusion_fixedfold_oof.npz manual pooled score",
+    "Fixed-fold exclusion convergence",
+    "ijcvsplatex.cls unchanged template asset",
+    "ijcvsplatex-num.bst unchanged template asset",
+    "LogoIJCVSP.pdf unchanged template asset",
+    "LogoIJCVSP.eps unchanged template asset",
+    "booktabs.sty unchanged template asset",
+    "fancyhdr.sty unchanged template asset",
+    "lastpage.sty unchanged template asset",
+    "multirow.sty unchanged template asset",
+    "natbib.sty unchanged template asset",
+    "sectsty.sty unchanged template asset",
+    "No editorial placeholders in main source"
+  ],
+  "probabilities": {
+    "global_oof.npz": {
+      "macro_f1": 0.5220608956637554,
+      "confusion": [
+        [
+          15142,
+          7042,
+          1572
+        ],
+        [
+          6644,
+          9130,
+          2389
+        ],
+        [
+          1166,
+          2134,
+          2598
+        ]
+      ]
+    },
+    "within_fold_oof.npz": {
+      "macro_f1": 0.5188715615569914,
+      "confusion": [
+        [
+          14890,
+          7120,
+          1746
+        ],
+        [
+          6546,
+          9052,
+          2565
+        ],
+        [
+          1141,
+          2071,
+          2686
+        ]
+      ]
+    },
+    "reduced_nonnested_oof.npz": {
+      "macro_f1": 0.5171442878303846,
+      "confusion": [
+        [
+          15116,
+          6096,
+          2544
+        ],
+        [
+          6299,
+          7891,
+          3973
+        ],
+        [
+          919,
+          1600,
+          3379
+        ]
+      ]
+    },
+    "reduced_nested_oof.npz": {
+      "macro_f1": 0.5156904848731436,
+      "confusion": [
+        [
+          15090,
+          6030,
+          2636
+        ],
+        [
+          6298,
+          7793,
+          4072
+        ],
+        [
+          925,
+          1549,
+          3424
+        ]
+      ]
+    },
+    "lbfgs_global_oof.npz": {
+      "macro_f1": 0.5231427768302456,
+      "confusion": [
+        [
+          15277,
+          7030,
+          1449
+        ],
+        [
+          6759,
+          9183,
+          2221
+        ],
+        [
+          1199,
+          2180,
+          2519
+        ]
+      ]
+    },
+    "lbfgs_within_fold_oof.npz": {
+      "macro_f1": 0.5213931545538982,
+      "confusion": [
+        [
+          14972,
+          7215,
+          1569
+        ],
+        [
+          6610,
+          9222,
+          2331
+        ],
+        [
+          1150,
+          2157,
+          2591
+        ]
+      ]
+    },
+    "lbfgs_cleaner_group_oof.npz": {
+      "macro_f1": 0.519044181991255,
+      "confusion": [
+        [
+          14723,
+          7491,
+          1542
+        ],
+        [
+          6491,
+          9347,
+          2325
+        ],
+        [
+          1126,
+          2208,
+          2564
+        ]
+      ]
+    },
+    "lbfgs_raw_excluded_oof.npz": {
+      "macro_f1": 0.5176040251777198,
+      "confusion": [
+        [
+          14548,
+          7083,
+          1551
+        ],
+        [
+          6478,
+          9189,
+          2328
+        ],
+        [
+          1207,
+          2166,
+          2496
+        ]
+      ]
+    },
+    "lbfgs_exclusion_fixedfold_oof.npz": {
+      "macro_f1": 0.5184430869527191,
+      "confusion": [
+        [
+          14505,
+          7140,
+          1537
+        ],
+        [
+          6606,
+          9084,
+          2305
+        ],
+        [
+          1166,
+          2141,
+          2562
+        ]
+      ]
+    }
+  },
+  "note": "Independent arithmetic/alignment checks; not independent author execution.",
+  "meta_refits": [
+    {
+      "arm": "nonnested",
+      "outer_fold": 1,
+      "n_iter": [
+        54
+      ],
+      "max_probability_difference": 0.0
+    },
+    {
+      "arm": "nested",
+      "outer_fold": 1,
+      "n_iter": [
+        43
+      ],
+      "max_probability_difference": 0.0
+    },
+    {
+      "arm": "nonnested",
+      "outer_fold": 2,
+      "n_iter": [
+        58
+      ],
+      "max_probability_difference": 0.0
+    },
+    {
+      "arm": "nested",
+      "outer_fold": 2,
+      "n_iter": [
+        43
+      ],
+      "max_probability_difference": 0.0
+    },
+    {
+      "arm": "nonnested",
+      "outer_fold": 3,
+      "n_iter": [
+        61
+      ],
+      "max_probability_difference": 0.0
+    },
+    {
+      "arm": "nested",
+      "outer_fold": 3,
+      "n_iter": [
+        40
+      ],
+      "max_probability_difference": 0.0
+    }
+  ]
+}

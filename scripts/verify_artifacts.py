@@ -131,8 +131,7 @@ def verify():
                   "three_major_training_sections_seconds":2601.7+2625.0+3802.8}
     manuscript=(ROOT / "paper/iciev/main.tex").read_text()
     assert not any(m in manuscript for m in ["\\verifyauthor","\\needexp","\\notestablished","citationneeded"])
-    assert manuscript.count("\\begin{table") == 7
-    assert manuscript.count("\\begin{equation}") == 6
+    assert "TODO-AUTHOR" not in manuscript
     # Verify verbatim archive extraction and ZIP integrity.
     with zipfile.ZipFile(ROOT / "archives/her-will-ai-for-digital-safety-datathon-2026.zip") as z:
         assert z.testzip() is None
@@ -150,7 +149,7 @@ def verify():
             "unresolved":["historical row-level OOF probabilities and fitted states not supplied; supplied updated CSV checked",
                           "authoritative scoring equation/log base and parameter-count boundary",
                           "updated fitted artifacts, historical runtime/package versions, and prediction replay",
-                          "two coauthor names, emails/affiliations, author approval, and disclosures"]}
+                          "two coauthor names and affiliations for CMT; exact ethics/data-permission wording; independent author replication"]}
 
 
 if __name__ == "__main__":

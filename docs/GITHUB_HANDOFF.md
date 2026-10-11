@@ -1,21 +1,11 @@
-# GitHub publication and review
+# GitHub revision handoff
 
 Repository: https://github.com/AdilShamim8/AI-for-Digital-Safety
 
-Publication branch: lightbanglahc-major-revision-20261011
+The first audit revision was merged through PR #1 (main commit bb20034). The completed follow-up is prepared on `lightbanglahc-completed-audit-20261011`, based on that merged commit. It adds the actual reduced nested-stacking experiment, convergence and duplicate sensitivities, conditional bootstrap records, the current main paper and attached supplements.
 
-The branch is based on remote main a134892 and includes the measured paper
-revision, both PDF options, the source ZIP, datasets, notebooks, audit outputs
-and repository verification improvements. The previous GitHub plugin HTTP 403
-response is retained in the dated audit report as historical provenance.
+Use `paper/iciev/main.tex`, `paper/iciev/main.pdf` and `releases/LightBanglaHC_Revised_Overleaf.zip`. Earlier archives and `repository.bundle` are historical records. New scientific records and replication scripts are under `submission_revision/`.
 
-Checks: make verify; make verify-probabilities; make paper; make paper-anonymized.
-The first command does not train models or need scientific Python dependencies.
-The probability check uses the pinned LR environment and saved OOF arrays.
+Checks: `make verify`, `make verify-probabilities`, `make verify-followup`, `make paper`, `make paper-supplement`. The standard-library check validates both manifests and packaged sources. Scientific checks use the pinned environment and retained probabilities; they do not retrain the base models.
 
-Review the draft PR before merging. Scientific and author TODOs are explicit;
-repository publication does not constitute conference submission or approval.
-The root repository.bundle and older source ZIP are historical records.
-Use releases/LightBanglaHC_Revised_Overleaf.zip for the revised paper.
-A delivery patch can be generated with git diff --binary main...HEAD; generated
-patches are omitted from version control to avoid duplicating the repository.
+Publishing this branch does not submit the paper to a conference. Exact ethics/data-permission wording and independent author replication remain factual author requirements. Review the current revision report before certifying submission.
